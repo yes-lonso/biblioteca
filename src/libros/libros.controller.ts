@@ -8,7 +8,7 @@ export class LibrosController {
   constructor(private readonly librosService: LibrosService) {}
 
   @Post()
-  create(@Body() createLibroDto: CreateLibroDto) {
+  create(@Body() createLibroDto: CreateLibroDto) {    
     return this.librosService.create(createLibroDto);
   }
 
@@ -18,8 +18,8 @@ export class LibrosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.librosService.findOne(+id);
+  findOne(@Param('id') isbn: string) {
+    return this.librosService.findOne(isbn);
   }
 
   @Patch(':id')
