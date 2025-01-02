@@ -16,7 +16,7 @@ export class Usuario extends Document{
     @Prop({trim:true})
     apellido2:string;    
     
-    @Prop({required:true,trim:true})
+    @Prop({default:true})
     activo:boolean;
 }
 
