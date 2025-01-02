@@ -9,100 +9,88 @@ import { FindOneLibroDto } from './dto/findone-libro.dto';
 
 @Injectable()
 export class LibrosService {
-  constructor(
-    @InjectModel(Libro.name)
-    private readonly librosModel: Model<Libro>
-  ) {}
 
-  async create(createLibroDto: CreateLibroDto): Promise<Libro> {
-    try {
-      const libro = await this.librosModel.create(createLibroDto);
-      return libro;
-    } catch (error) {      
-      if (error.code === 11000) {
-        throw new BadRequestException(`El libro ya existe con ese ISBN ${JSON.stringify(error.keyValue)}`);
-      }
-      console.log(error)
-      throw new InternalServerErrorException('Error al crear el libro');
-    }
-  }
+    constructor(
+        @InjectModel(Libro.name)
+        private readonly librosModel: Model<Libro>
+    ) { }
 
-  findAll() {
-    return this.librosModel.find().exec();
-  }
-
-  async findOne(findOneLibroDto: FindOneLibroDto): Promise<Libro> {
-    const { isbn, titulo, autor } = findOneLibroDto;
-
-    // Verificar que solo un criterio de búsqueda esté presente
-    const criteria = [isbn, titulo, autor].filter(Boolean);
-    if (criteria.length !== 1) {
-      throw new BadRequestException('Debes proporcionar exactamente un criterio de búsqueda: isbn, titulo o autor');
+    async create(createLibroDto: CreateLibroDto): Promise<Libro> {
+        try {
+            return await this.librosModel.create(createLibroDto);
+        } catch (error) {
+            this.handleError(error);
+        }
     }
 
-    try {
-      const query: any = {};
-
-      if (isbn) {
-        query['isbn'] = isbn;
-      }
-
-      if (titulo) {
-        query['titulo'] = { $regex: titulo, $options: 'i' };
-      }
-
-      if (autor) {
-        query['autor'] = { $regex: autor, $options: 'i' };
-      }
-
-      const libro = await this.librosModel.findOne(query).exec();
-      if (!libro) {
-        throw new BadRequestException('No se encontró ningún libro con los criterios proporcionados');
-      }
-      return libro;
-    } catch (error) {
-      throw new InternalServerErrorException('Error al buscar el libro');
+    async findAll(): Promise<Libro[]> {
+        return await this.librosModel.find().exec();
     }
-  }
 
-  async findByIsbn(isbn: string): Promise<Libro> {
-    try {
-      return this.librosModel.findOne({isbn}).exec();      
-    } catch (error) {
-      throw new InternalServerErrorException('Error al buscar el libro');
+    async findOne(findOneLibroDto: FindOneLibroDto): Promise<Libro> {
+        const { isbn, titulo, autor } = findOneLibroDto;
+
+        // Verificar que solo un criterio de búsqueda esté presente
+        const criteria = [isbn, titulo, autor].filter(Boolean);
+        if (criteria.length !== 1) {
+            throw new BadRequestException('Debes proporcionar exactamente un criterio de búsqueda: isbn, titulo o autor');
+        }
+
+        const query: any = {};
+
+        if (isbn) {
+            query['isbn'] = isbn;
+        }
+
+        if (titulo) {
+            query['titulo'] = { $regex: titulo, $options: 'i' };
+        }
+
+        if (autor) {
+            query['autor'] = { $regex: autor, $options: 'i' };
+        }
+        
+        let libro: Libro | null;
+        try {
+            libro = await this.librosModel.findOne(query).exec();                        
+        } catch (error) {
+            throw new InternalServerErrorException('Error al buscar el libro');
+        }
+        if (!libro) {
+            throw new BadRequestException('No se encontró ningún libro con los criterios proporcionados');
+        }
+        return libro;
     }
-  }
 
-  async update(isbn: string, updateLibroDto: UpdateLibroDto): Promise<Libro> {    
-    
-    const libroBD = await this.findByIsbn(isbn);
-    if (libroBD) {
-      try {
-        return await this.librosModel.findOneAndUpdate({isbn},updateLibroDto,{new:true}).exec();                        
-      } catch (error) {
+    async update(isbn: string, updateLibroDto: UpdateLibroDto): Promise<Libro> {
+
+        const libroBD = await this.findOne({isbn});
+        if (libroBD) {
+            try {
+                return await this.librosModel.findOneAndUpdate({ isbn }, updateLibroDto, { new: true }).exec();
+            } catch (error) {
+                this.handleError(error);      
+            }
+        } 
+    }
+
+    async remove(isbn: string): Promise<Libro> {
+
+        const libroBD = await this.findOne({isbn});
+        if (libroBD) {
+            try {
+                return await this.librosModel.findOneAndDelete({ isbn }).exec();
+            } catch (error) {
+                this.handleError(error);
+            }
+        } 
+    }
+
+    private handleError(error: any): void {
         if (error.code === 11000) {
-          throw new BadRequestException(`El libro ya existe con ese ISBN ${JSON.stringify(error.keyValue)}`);
-        }      
-        console.log(error)
-        throw new InternalServerErrorException('Error al actualizar el libro');
-      }
-    } else {
-      throw new NotFoundException(`No se encontró ningún libro con ISBN ${isbn}`);
+            throw new BadRequestException(`Ya existe un libro con el ISBN ${JSON.stringify(error.keyValue)}`);
+        }
+        console.log(error);
+        throw new InternalServerErrorException('Error al procesar la solicitud');
     }
-  }
-
-  async remove(isbn: string): Promise<Libro> {
-
-    const libroBD = await this.findByIsbn(isbn);
-    if (libroBD) {
-      try {
-        return await this.librosModel.findOneAndDelete({isbn}).exec();                        
-      } catch (error) {              
-        console.log(error)
-        throw new InternalServerErrorException('Error al actualizar el libro');
-      }
-    } else {
-      throw new NotFoundException(`No se encontró ningún libro con ISBN ${isbn}`);
-    }
-  }
 }
