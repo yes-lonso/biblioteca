@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PrestamosService } from './prestamos.service';
 import { CreatePrestamoDto } from './dto/create-prestamo.dto';
 import { UpdatePrestamoDto } from './dto/update-prestamo.dto';
+import { FindPrestamoDto } from './dto/find-prestamo.dto';
+import { find } from 'rxjs';
 
 @Controller('prestamos')
 export class PrestamosController {
@@ -13,22 +15,17 @@ export class PrestamosController {
   }
 
   @Get()
-  findAll() {
-    return this.prestamosService.findAll();
+  findAll(@Body() findPrestamoDto: FindPrestamoDto) {
+    return this.prestamosService.findAll(findPrestamoDto);
+  }  
+
+  @Patch()
+  update(@Body() updatePrestamoDto: UpdatePrestamoDto) {
+    return this.prestamosService.update(updatePrestamoDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.prestamosService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePrestamoDto: UpdatePrestamoDto) {
-    return this.prestamosService.update(+id, updatePrestamoDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.prestamosService.remove(+id);
+  @Delete(':idUsuario/:idLibro')
+  remove(@Param('idUsuario') idUsuario: string, @Param('idLibro') idLibro: string) {
+    return this.prestamosService.remove(idUsuario, idLibro);
   }
 }

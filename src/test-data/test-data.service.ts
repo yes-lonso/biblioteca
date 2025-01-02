@@ -21,8 +21,7 @@ export class TestDataService {
   async loadData(): Promise<string> {
     try {
       await this.usuariosModel.deleteMany({});
-      await this.librosModel.deleteMany({});
-      console.log(usuarios)
+      await this.librosModel.deleteMany({});      
       await this.usuariosModel.insertMany(usuarios);
       await this.librosModel.insertMany(libros);
       return `Datos cargados...`;

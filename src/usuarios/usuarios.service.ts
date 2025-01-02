@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -68,7 +68,7 @@ export class UsuariosService {
 
     private handleError(error: any): void {
         if (error.code === 11000) {
-            throw new BadRequestException(`Ya existe un usuario con el email ${JSON.stringify(error.keyValue)}`);
+            throw new ConflictException(`Ya existe un usuario con el email ${JSON.stringify(error.keyValue)}`);
         }
         throw new InternalServerErrorException('Error al procesar la solicitud');
     }

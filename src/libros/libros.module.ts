@@ -9,6 +9,7 @@ import { Libro, LibroSchema } from './entities/libro.entity';
 @Module({
   controllers: [LibrosController],
   providers: [LibrosService],
-  imports: [MongooseModule.forFeature([{ name: Libro.name, schema: LibroSchema }])]
+  imports: [MongooseModule.forFeature([{ name: Libro.name, schema: LibroSchema }])],
+  exports: [MongooseModule],
 })
 export class LibrosModule {}

@@ -5,7 +5,8 @@ export const libros = [
         "autor": "Gabriel García Márquez",
         "fechaPub": "1967-05-30",
         "resumen": "La historia de la familia Buendía en el pueblo ficticio de Macondo.",
-        "genero": "Realismo mágico"
+        "genero": "Realismo mágico",
+        "stock": 5
     },
     {
         "isbn": "9788437604947",
@@ -13,7 +14,8 @@ export const libros = [
         "autor": "Miguel de Cervantes",
         "fechaPub": "1605-01-16",
         "resumen": "Las aventuras de un hidalgo obsesionado con los libros de caballería.",
-        "genero": "Clásico"
+        "genero": "Clásico",
+        "stock": 3
     },
     {
         "isbn": "9788420483001",
@@ -21,7 +23,8 @@ export const libros = [
         "autor": "Carlos Ruiz Zafón",
         "fechaPub": "2001-04-17",
         "resumen": "Un joven descubre un libro maldito que cambiará su vida.",
-        "genero": "Misterio"
+        "genero": "Misterio",
+        "stock": 2
     },
     {
         "isbn": "9788490664393",
@@ -29,7 +32,8 @@ export const libros = [
         "autor": "Gabriel García Márquez",
         "fechaPub": "1985-09-05",
         "resumen": "Una historia de amor que trasciende el tiempo.",
-        "genero": "Romance"
+        "genero": "Romance",
+        "stock": 1
     },
     {
         "isbn": "9788432234674",
@@ -37,7 +41,8 @@ export const libros = [
         "autor": "Paulo Coelho",
         "fechaPub": "1988-11-01",
         "resumen": "Un pastor busca su leyenda personal.",
-        "genero": "Filosofía"
+        "genero": "Filosofía",
+        "stock": 1
     },
     {
         "isbn": "9788426482260",
@@ -45,7 +50,8 @@ export const libros = [
         "autor": "Julio Cortázar",
         "fechaPub": "1963-06-28",
         "resumen": "Una novela innovadora que desafía la narrativa tradicional.",
-        "genero": "Experimental"
+        "genero": "Experimental",
+        "stock": 2
     },
     {
         "isbn": "9788437502417",
@@ -53,7 +59,8 @@ export const libros = [
         "autor": "Juan Rulfo",
         "fechaPub": "1955-01-01",
         "resumen": "Un viaje a Comala en busca de un padre desconocido.",
-        "genero": "Realismo mágico"
+        "genero": "Realismo mágico",
+        "stock": 3
     },
     {
         "isbn": "9788420681944",
@@ -61,7 +68,8 @@ export const libros = [
         "autor": "Isabel Allende",
         "fechaPub": "1982-01-01",
         "resumen": "La saga de una familia llena de amor, política y tragedia.",
-        "genero": "Realismo mágico"
+        "genero": "Realismo mágico",
+        "stock": 4
     },
     {
         "isbn": "9788493807672",
@@ -69,7 +77,8 @@ export const libros = [
         "autor": "Gabriel García Márquez",
         "fechaPub": "1981-01-01",
         "resumen": "El relato del asesinato anunciado de Santiago Nasar.",
-        "genero": "Crimen"
+        "genero": "Crimen",
+        "stock": 1
     },
     {
         "isbn": "9788497932542",
@@ -77,7 +86,8 @@ export const libros = [
         "autor": "Torcuato Luca de Tena",
         "fechaPub": "1979-01-01",
         "resumen": "Una mujer se interna en un hospital psiquiátrico para resolver un crimen.",
-        "genero": "Thriller"
+        "genero": "Thriller",
+        "stock": 2
     }
 ]
 
