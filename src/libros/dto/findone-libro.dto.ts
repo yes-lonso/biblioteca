@@ -1,8 +1,8 @@
-import { IsOptional, IsString, IsISBN} from 'class-validator';
+import { IsOptional, IsString} from 'class-validator';
 
 export class FindOneLibroDto {
   @IsOptional()
-  @IsISBN('13', { message: 'El ISBN debe ser un número válido' })
+  @IsString({ message: 'El ISBN debe ser un número válido' })
   isbn?: string;
 
   @IsOptional()

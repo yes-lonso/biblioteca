@@ -24,13 +24,13 @@ export class LibrosController {
     return this.librosService.findOne(findOneLibroDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLibroDto: UpdateLibroDto) {
-    return this.librosService.update(+id, updateLibroDto);
+  @Patch(':isbn')
+  update(@Param('isbn') isbn: string, @Body() updateLibroDto: UpdateLibroDto) {
+    return this.librosService.update(isbn, updateLibroDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.librosService.remove(+id);
+  @Delete(':isbn')
+  remove(@Param('isbn') isbn: string) {
+    return this.librosService.remove(isbn);
   }
 }

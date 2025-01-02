@@ -1,9 +1,10 @@
 import { Type } from "class-transformer";
-import { IsDate, IsISBN, IsOptional, IsString, MinLength, IsNotEmpty } from "class-validator";
+import { IsDate, IsOptional, IsString, MinLength, IsNotEmpty } from "class-validator";
 
 export class CreateLibroDto {
     
-    @IsISBN('13', { message: 'El valor ISBN debe estar en formato ISBN-13' })
+    @IsString({ message: 'El valor ISBN debe estar en formato ISBN-13' })
+    @MinLength(13, { message: 'El valor ISBN debe tener 13 caracteres' })
     @IsNotEmpty({ message: 'La propiedad \'isbn\' es requerida' })
     isbn: string;
 

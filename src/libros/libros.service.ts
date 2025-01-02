@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateLibroDto } from './dto/create-libro.dto';
 import { UpdateLibroDto } from './dto/update-libro.dto';
 import { Libro } from './entities/libro.entity';
 import { FindOneLibroDto } from './dto/findone-libro.dto';
+
 
 @Injectable()
 export class LibrosService {
@@ -17,10 +18,11 @@ export class LibrosService {
     try {
       const libro = await this.librosModel.create(createLibroDto);
       return libro;
-    } catch (error) {
+    } catch (error) {      
       if (error.code === 11000) {
         throw new BadRequestException(`El libro ya existe con ese ISBN ${JSON.stringify(error.keyValue)}`);
       }
+      console.log(error)
       throw new InternalServerErrorException('Error al crear el libro');
     }
   }
@@ -63,15 +65,44 @@ export class LibrosService {
     }
   }
 
-  async findById(id: string): Promise<Libro> {
-    return this.librosModel.findById(id).exec();
+  async findByIsbn(isbn: string): Promise<Libro> {
+    try {
+      return this.librosModel.findOne({isbn}).exec();      
+    } catch (error) {
+      throw new InternalServerErrorException('Error al buscar el libro');
+    }
   }
 
-  update(id: number, updateLibroDto: UpdateLibroDto) {
-    return `This action updates a #${id} libro`;
+  async update(isbn: string, updateLibroDto: UpdateLibroDto): Promise<Libro> {    
+    
+    const libroBD = await this.findByIsbn(isbn);
+    if (libroBD) {
+      try {
+        return await this.librosModel.findOneAndUpdate({isbn},updateLibroDto,{new:true}).exec();                        
+      } catch (error) {
+        if (error.code === 11000) {
+          throw new BadRequestException(`El libro ya existe con ese ISBN ${JSON.stringify(error.keyValue)}`);
+        }      
+        console.log(error)
+        throw new InternalServerErrorException('Error al actualizar el libro');
+      }
+    } else {
+      throw new NotFoundException(`No se encontró ningún libro con ISBN ${isbn}`);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} libro`;
+  async remove(isbn: string): Promise<Libro> {
+
+    const libroBD = await this.findByIsbn(isbn);
+    if (libroBD) {
+      try {
+        return await this.librosModel.findOneAndDelete({isbn}).exec();                        
+      } catch (error) {              
+        console.log(error)
+        throw new InternalServerErrorException('Error al actualizar el libro');
+      }
+    } else {
+      throw new NotFoundException(`No se encontró ningún libro con ISBN ${isbn}`);
+    }
   }
 }
