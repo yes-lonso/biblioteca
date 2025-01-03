@@ -3,7 +3,6 @@ import { LibrosModule } from './libros/libros.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { PrestamosModule } from './prestamos/prestamos.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { DateUtilsService } from './common/helpers/date-utils.helpers';
 import { TestDataModule } from './test-data/test-data.module';
 
 
@@ -18,9 +17,6 @@ import { TestDataModule } from './test-data/test-data.module';
     TestDataModule,
   ],
   controllers: [],
-  providers: [
-    DateUtilsService,
-    
-  ],
+  providers: [],
 })
 export class AppModule { }

@@ -5,29 +5,74 @@ import { CreateLibroDto } from './dto/create-libro.dto';
 import { UpdateLibroDto } from './dto/update-libro.dto';
 import { Libro } from './entities/libro.entity';
 import { FindOneLibroDto } from './dto/findone-libro.dto';
+import { ResponseLibroDto } from './dto/response-libro.dto';
 
-
+/**
+ * Servicio para gestionar los libros en la biblioteca.
+ * 
+ * Este servicio proporciona métodos para crear, recuperar, actualizar y eliminar registros de libros.
+ * 
+ * Métodos disponibles:
+ * 
+ * - `create(createLibroDto: CreateLibroDto): Promise<Libro>`: Crea un nuevo libro en la biblioteca.
+ * - `findAll(): Promise<Libro[]>`: Recupera todos los registros de libros.
+ * - `findOne(findOneLibroDto: FindOneLibroDto): Promise<Libro>`: Recupera un libro basado en criterios de búsqueda.
+ * - `update(isbn: string, updateLibroDto: UpdateLibroDto): Promise<Libro>`: Actualiza un registro de libro.
+ * - `remove(isbn: string): Promise<Libro>`: Elimina un registro de libro.
+ */
 @Injectable()
 export class LibrosService {
 
+    /**
+     * Construye una nueva instancia de LibrosService.
+     * 
+     * @param {Model<Libro>} librosModel - El modelo de Mongoose para la colección de libros.
+     */
     constructor(
         @InjectModel(Libro.name)
         private readonly librosModel: Model<Libro>
     ) { }
 
-    async create(createLibroDto: CreateLibroDto): Promise<Libro> {
+    /**
+     * Añade un nuevo libro en la biblioteca.
+     * 
+     * @param {CreateLibroDto} createLibroDto - Objeto de transferencia de datos que contiene los detalles del libro a crear.
+     * @returns {Promise<Libro>} - Una promesa que se resuelve en el objeto del libro creado.
+     * @throws {ConflictException} - Si el libro ya existe.
+     * @throws {InternalServerErrorException} - Si hay un error al intentar crear el libro.
+     */
+    async create(createLibroDto: CreateLibroDto): Promise<ResponseLibroDto> {
         try {
-            return await this.librosModel.create(createLibroDto);
+            const libro =  await this.librosModel.create(createLibroDto);            
+            return new ResponseLibroDto('El libro ha sido creado con éxito',[libro]);
         } catch (error) {
-            this.handleError(error);
+            this.handleError(error, 'Error al intentar crear el libro');
         }
     }
 
-    async findAll(): Promise<Libro[]> {
-        return await this.librosModel.find().exec();
+    /**
+     * Recupera todos los registros de libros.
+     * 
+     * @returns {Promise<Libro[]>} - Una promesa que se resuelve en una lista de objetos de libros.
+     */
+    async findAll(): Promise<ResponseLibroDto> {
+        try {
+            const libros = await this.librosModel.find().exec();
+            return new ResponseLibroDto('Lista de libros consultada con éxito', libros);            
+        } catch (error) {
+            this.handleError(error, 'Error al intentar consultar todos los libros de la colección');
+        }
     }
 
-    async findOne(findOneLibroDto: FindOneLibroDto): Promise<Libro> {
+    /**
+     * Recupera un libro basado en criterios de búsqueda.
+     * 
+     * @param {FindOneLibroDto} findOneLibroDto - Objeto de transferencia de datos que contiene los criterios de búsqueda.
+     * @returns {Promise<Libro>} - Una promesa que se resuelve en el objeto del libro encontrado.
+     * @throws {NotFoundException} - Si no se encuentra ningún libro con los criterios proporcionados.
+     * @throws {InternalServerErrorException} - Si hay un error al intentar buscar el libro.
+     */
+    async findOne(findOneLibroDto: FindOneLibroDto): Promise<ResponseLibroDto> {
         const { isbn, titulo, autor } = findOneLibroDto;
 
         // Verificar que solo un criterio de búsqueda esté presente
@@ -36,61 +81,90 @@ export class LibrosService {
             throw new BadRequestException('Debes proporcionar exactamente un criterio de búsqueda: isbn, titulo o autor');
         }
 
-        const query: any = {};
-
-        if (isbn) {
-            query['isbn'] = isbn;
-        }
-
-        if (titulo) {
-            query['titulo'] = { $regex: titulo, $options: 'i' };
-        }
-
-        if (autor) {
-            query['autor'] = { $regex: autor, $options: 'i' };
-        }
-        
-        let libro: Libro | null;
         try {
-            libro = await this.librosModel.findOne(query).exec();                        
+            const query: any = {};
+
+            if (isbn) {
+                query['isbn'] = isbn;
+            }
+
+            if (titulo) {
+                query['titulo'] = { $regex: titulo, $options: 'i' };
+            }
+
+            if (autor) {
+                query['autor'] = { $regex: autor, $options: 'i' };
+            }
+
+            const libro = await this.librosModel.findOne(query).exec();
+            if (!libro) {
+                throw new NotFoundException('No se encontró ningún libro con los criterios proporcionados');
+            }
+            return new ResponseLibroDto('Libro encontrado con éxito', [libro]);
         } catch (error) {
-            throw new InternalServerErrorException('Error al buscar el libro');
+            this.handleError(error, 'Error al intentar buscar el libro');
         }
-        if (!libro) {
-            throw new BadRequestException('No se encontró ningún libro con los criterios proporcionados');
-        }
-        return libro;
     }
 
-    async update(isbn: string, updateLibroDto: UpdateLibroDto): Promise<Libro> {
-
-        const libroBD = await this.findOne({isbn});
+    /**
+     * Actualiza un registro de libro.
+     * 
+     * @param {string} isbn - El ISBN del libro a actualizar.
+     * @param {UpdateLibroDto} updateLibroDto - Objeto de transferencia de datos que contiene los detalles de la actualización.
+     * @returns {Promise<Libro>} - Una promesa que se resuelve en el objeto del libro actualizado.
+     * @throws {NotFoundException} - Si no se encuentra el libro con el ISBN proporcionado.
+     * @throws {InternalServerErrorException} - Si hay un error al intentar actualizar el libro.
+     */
+    async update(isbn: string, updateLibroDto: UpdateLibroDto): Promise<ResponseLibroDto> {
+        const libroBD = await this.findOne({ isbn });
         if (libroBD) {
             try {
-                return await this.librosModel.findOneAndUpdate({ isbn }, updateLibroDto, { new: true }).exec();
+                const libro = await this.librosModel.findOneAndUpdate({ isbn }, updateLibroDto, { new: true }).exec();
+                return new ResponseLibroDto('El libro ha sido actualizado con éxito', [libro]);
             } catch (error) {
-                this.handleError(error);      
+                throw new InternalServerErrorException('Error al intentar actualizar el libro');
             }
-        } 
+        } else {
+            throw new NotFoundException(`No se encontró ningún libro con ISBN ${isbn}`);
+        }
     }
 
-    async remove(isbn: string): Promise<Libro> {
-
-        const libroBD = await this.findOne({isbn});
+    /**
+     * Elimina un registro de libro.
+     * 
+     * @param {string} isbn - El ISBN del libro a eliminar.
+     * @returns {Promise<Libro>} - Una promesa que se resuelve en el objeto del libro eliminado.
+     * @throws {NotFoundException} - Si no se encuentra el libro con el ISBN proporcionado.
+     * @throws {InternalServerErrorException} - Si hay un error al intentar eliminar el libro.
+     */
+    async remove(isbn: string): Promise<ResponseLibroDto> {
+        const libroBD = await this.findOne({ isbn });
         if (libroBD) {
             try {
-                return await this.librosModel.findOneAndDelete({ isbn }).exec();
+                const libro =  await this.librosModel.findOneAndDelete({ isbn }).exec();
+                return new ResponseLibroDto('El libro ha sido eliminado con éxito', [libro]);
             } catch (error) {
-                this.handleError(error);
+                throw new InternalServerErrorException('Error al intentar eliminar el libro');
             }
-        } 
+        } else {
+            throw new NotFoundException(`No se encontró ningún libro con ISBN ${isbn}`);
+        }
     }
 
-    private handleError(error: any): void {
-        if (error.code === 11000) {
-            throw new ConflictException(`Ya existe un libro con el ISBN ${JSON.stringify(error.keyValue)}`);
-        }
-        console.log(error);
-        throw new InternalServerErrorException('Error al procesar la solicitud');
+    /**
+   * Maneja los errores lanzados por las operaciones de la base de datos.
+   * 
+   * @param {any} error - El error lanzado por la operación de la base de datos.
+   * @throws {ConflictException} - Si el error es un conflicto de duplicados.
+   * @throws {InternalServerErrorException} - Si hay un error interno del servidor.
+   */
+  private handleError(error: any, errorMsg:string): void {
+    if (error.code === 11000) {
+      throw new ConflictException('¡El libro ya existe!');
+    } else if (error instanceof NotFoundException || error instanceof BadRequestException) {
+      throw error;
+    } else {
+      throw new InternalServerErrorException(errorMsg);
     }
+  }
 }
