@@ -1,0 +1,80 @@
+{
+   // Habilitar el autoguardado
+   "files.autoSave": "afterDelay",
+
+   // Formateo automático
+   "editor.formatOnPaste": true,
+   "editor.formatOnSave": true,
+   "editor.formatOnType": true,
+
+   // Configuración de Prettier como formateador predeterminado
+   "editor.defaultFormatter": "esbenp.prettier-vscode",
+   "prettier.singleQuote": true,
+   "prettier.semi": true,
+   "prettier.trailingComma": "all",
+   "prettier.printWidth": 80,
+   "prettier.tabWidth": 3,
+
+   // Configuración de TypeScript
+   "typescript.format.insertSpaceAfterConstructor": true,
+   "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
+   "typescript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+   "typescript.format.placeOpenBraceOnNewLineForFunctions": true,
+
+   // Configuración de JavaScript
+   "javascript.format.insertSpaceAfterConstructor": true,
+   "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+   "javascript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+   "javascript.format.placeOpenBraceOnNewLineForFunctions": true,
+
+   // Configuración de ESLint
+   "eslint.format.enable": true,
+   "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "always"
+   },
+
+   // Configuración de archivos y carpetas
+   "files.exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/node_modules": true,
+      "**/dist": true
+   },
+
+   // Configuración de terminal integrada
+   "terminal.integrated.defaultProfile.osx": "zsh",
+   "terminal.integrated.profiles.osx": {
+      "zsh": {
+         "path": "/bin/zsh",
+         "args": []
+      },
+      "bash": {
+         "path": "/bin/bash",
+         "args": []
+      },
+      "fish": {
+         "path": "/usr/local/bin/fish",
+         "args": []
+      }
+   },
+
+   // Configuración de emmet
+   "emmet.includeLanguages": {
+      "javascript": "javascriptreact",
+      "typescript": "typescriptreact"
+   },
+
+   // Configuración de path intellisense
+   "path-intellisense.mappings": {
+      "@src": "${workspaceRoot}/src",
+      "@modules": "${workspaceRoot}/src/modules",
+      "@common": "${workspaceRoot}/src/common"
+   },
+   "path-intellisense.extensionOnImport": true,
+   "path-intellisense.autoSlashAfterDirectory": true,
+
+   // Configuración de tabulaciones
+   "editor.tabSize": 3,
+   "editor.insertSpaces": true,
+   "editor.detectIndentation": false
+}

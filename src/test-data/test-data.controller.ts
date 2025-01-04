@@ -3,10 +3,10 @@ import { TestDataService } from './test-data.service';
 
 @Controller('test-data')
 export class TestDataController {
-  constructor(private readonly testDataService: TestDataService) {}
+   constructor(private readonly testDataService: TestDataService) {}
 
-  @Get()
-  loadData() {
-    return this.testDataService.loadData();
-  }
+   @Get()
+   loadData() {
+      return this.testDataService.loadData();
+   }
 }
