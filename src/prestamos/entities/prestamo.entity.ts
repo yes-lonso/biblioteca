@@ -47,6 +47,22 @@ export class Prestamo extends Document {
     */
    @Prop({ type: Date })
    fechaDevolucionReal?: Date;
+
+   /**
+    * El nombre completo del usuario asociado con el préstamo.
+    *
+    * @example "Juan Pérez"
+    */
+   @Prop({ type: String, required: true})
+   nombreUsuario: string;
+
+   /**
+    * El título del libro asociado con el préstamo.
+    *
+    * @example "La Odisea"
+    */
+   @Prop({ type: String, required: true })
+   tituloLibro: string;
 }
 
 export const PrestamoSchema = SchemaFactory.createForClass(Prestamo);

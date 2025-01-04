@@ -12,6 +12,7 @@ import { UpdateLibroDto } from './dto/update-libro.dto';
 import { Libro } from './entities/libro.entity';
 import { FindOneLibroDto } from './dto/findone-libro.dto';
 import { ResponseLibroDto } from './dto/response-libro.dto';
+import { plainToInstance } from 'class-transformer';
 
 
 /**
@@ -50,9 +51,9 @@ export class LibrosService {
    async create(createLibroDto: CreateLibroDto): Promise<ResponseLibroDto> {
       try {
          const libro = await this.librosModel.create(createLibroDto);
-         return new ResponseLibroDto('El libro ha sido creado con éxito', [
-            libro,
-         ]);
+         return plainToInstance(ResponseLibroDto, libro, {
+            excludeExtraneousValues: true,
+         });             
       } catch (error) {
          this.handleError(error, 'Error al intentar crear el libro');
       }
@@ -61,15 +62,14 @@ export class LibrosService {
    /**
     * Recupera todos los registros de libros.
     *
-    * @returns {Promise<Libro[]>} - Una promesa que se resuelve en una lista de objetos de libros.
+    * @returns {Promise<ResponseLibroDto[]>} - Una promesa que se resuelve en una lista de objetos de libros.
     */
-   async findAll(): Promise<ResponseLibroDto> {
+   async findAll(): Promise<ResponseLibroDto[]> {
       try {
          const libros = await this.librosModel.find().exec();
-         return new ResponseLibroDto(
-            'Lista de libros recuperada con éxito',
-            libros,
-         );
+         return plainToInstance(ResponseLibroDto, libros, {
+            excludeExtraneousValues: true,
+         });             
       } catch (error) {
          this.handleError(
             error,
@@ -118,9 +118,9 @@ export class LibrosService {
                'No se encontró ningún libro con los criterios proporcionados',
             );
          }
-         return new ResponseLibroDto('El libro ha sido encontrado con éxito', [
-            libro,
-         ]);
+         return plainToInstance(ResponseLibroDto, libro, {
+            excludeExtraneousValues: true,
+         });             
       } catch (error) {
          this.handleError(error, 'Error al intentar buscar el libro');
       }
@@ -145,10 +145,7 @@ export class LibrosService {
             const libro = await this.librosModel
                .findOneAndUpdate({ isbn }, updateLibroDto, { new: true })
                .exec();
-            return new ResponseLibroDto(
-               'El libro ha sido actualizado con éxito',
-               [libro],
-            );
+            return plainToInstance(ResponseLibroDto, libro, { excludeExtraneousValues: true });             
          } else {
             throw new NotFoundException(
                `No se encontró ningún libro con ISBN ${isbn}`,
@@ -174,10 +171,9 @@ export class LibrosService {
             const libro = await this.librosModel
                .findOneAndDelete({ isbn })
                .exec();
-            return new ResponseLibroDto(
-               'El libro ha sido eliminado con éxito',
-               [libro],
-            );
+            return plainToInstance(ResponseLibroDto, libro, {
+               excludeExtraneousValues: true,
+            });             
          } else {
             throw new NotFoundException(
                `No se encontró ningún libro con ISBN ${isbn}`,

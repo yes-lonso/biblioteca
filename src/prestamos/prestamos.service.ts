@@ -1,4 +1,5 @@
 import {
+   BadRequestException,
    ConflictException,
    Injectable,
    InternalServerErrorException,
@@ -14,6 +15,7 @@ import { Prestamo } from './entities/prestamo.entity';
 import { Libro } from 'src/libros/entities/libro.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { ResponsePrestamoDto } from './dto/response-prestamo.dto';
+import { plainToInstance } from 'class-transformer';
 
 /**
  * Servicio para gestionar los préstamos de libros en la biblioteca.
@@ -36,8 +38,8 @@ export class PrestamosService {
       @InjectModel(Libro.name)
       private readonly libroModel: Model<Libro>,
       @InjectModel(Usuario.name)
-      private readonly usuarioModel: Model<Usuario>
-   ) { }
+      private readonly usuarioModel: Model<Usuario>,
+   ) {}
 
    /**
     * Crea un nuevo préstamo para un usuario.
@@ -58,13 +60,15 @@ export class PrestamosService {
     * @throws {InternalServerErrorException} - Si hay un error al intentar registrar el préstamo.
     */
 
-   async create(createPrestamoDto: CreatePrestamoDto): Promise<ResponsePrestamoDto> {
+   async create(
+      createPrestamoDto: CreatePrestamoDto,
+   ): Promise<ResponsePrestamoDto> {
       const { idUsuario, idLibro, diasPrestamo } = createPrestamoDto;
 
       const session = await this.prestamoModel.db.startSession();
 
       try {
-         const resultado = await session.withTransaction(async () => {
+         const prestamo = await session.withTransaction(async () => {
             // Se valida que el libro exista
             const libro = await this.libroModel
                .findOne({ isbn: idLibro })
@@ -72,14 +76,14 @@ export class PrestamosService {
                .exec();
             if (!libro) {
                throw new NotFoundException(
-                  `El libro con ISBN ${idLibro} no existe`
+                  `El libro con ISBN ${idLibro} no existe`,
                );
             }
 
             // Se valida que el libro tenga stock suficiente para la operación del préstamo
             if (libro.stock <= 0) {
                throw new ConflictException(
-                  `No hay ejemplares disponibles del libro con ISBN ${idLibro}`
+                  `No hay ejemplares disponibles del libro con ISBN ${idLibro}`,
                );
             }
 
@@ -90,14 +94,14 @@ export class PrestamosService {
                .exec();
             if (!usuario) {
                throw new NotFoundException(
-                  `El usuario con ID ${idUsuario} no existe`
+                  `El usuario con ID ${idUsuario} no existe`,
                );
             }
 
             // Se verifica que el usuario esté activo
             if (!usuario.activo) {
                throw new ConflictException(
-                  `El usuario con ID ${idUsuario} no está activo`
+                  `El usuario con ID ${idUsuario} no está activo`,
                );
             }
 
@@ -108,7 +112,7 @@ export class PrestamosService {
                .exec();
             if (prestamoBD) {
                throw new ConflictException(
-                  `El usuario con ID ${idUsuario} ya tiene un préstamo activo`
+                  `El usuario con ID ${idUsuario} ya tiene un préstamo activo`,
                );
             }
 
@@ -122,6 +126,8 @@ export class PrestamosService {
                idLibro,
                fechaPrestamo: new Date(),
                fechaDevolucion,
+               nombreUsuario: usuario.nombreCompleto,
+               tituloLibro: libro.titulo
             });
 
             await prestamo.save({ session });
@@ -130,25 +136,28 @@ export class PrestamosService {
             libro.stock -= 1;
             await libro.save({ session });
 
-            return new ResponsePrestamoDto(prestamo, usuario, libro);
+            return prestamo;
          });
 
          // Se confirma la persistencia de los datos en BD
          await session.commitTransaction();
-         // Se retorna el resultado
-         return resultado;
+
+         return plainToInstance(ResponsePrestamoDto, prestamo, {
+            excludeExtraneousValues: true,
+         });
       } catch (error) {
          if (session.inTransaction()) {
             await session.abortTransaction();
          }
          if (
             error instanceof NotFoundException ||
-            error instanceof ConflictException
+            error instanceof ConflictException ||
+            error instanceof BadRequestException
          ) {
             throw error;
          }
          throw new InternalServerErrorException(
-            'Error al intentar registrar el préstamo del libro al usuario'
+            'Error al intentar registrar el préstamo del libro al usuario',
          );
       } finally {
          session.endSession();
@@ -166,10 +175,13 @@ export class PrestamosService {
     *
     * @throws {InternalServerErrorException} Si ocurre un error al intentar recuperar los registros de préstamos.
     */
-   async findAll(findPrestamoDto: FindPrestamoDto): Promise<ResponsePrestamoDto[]> {
+   async findAll(
+      findPrestamoDto: FindPrestamoDto,
+   ): Promise<ResponsePrestamoDto[]> {
       // findPrestamoDto opcionalmente puede contener:
       // el ISBN del libro
       // el email del usuario
+      // el estado del préstamo (prestados, devueltos, todos)
       // se pueden recibir ambos datos
       // se puede no recibir ninguno de ellos
 
@@ -197,24 +209,13 @@ export class PrestamosService {
       // Se ejecuta la consulta
       try {
          const prestamos = await this.prestamoModel.find(query).exec();
-         // recorrer los resultados y construir un array de objetos ResponsePrestamoDto
-         // para cada resultado se debe obtener el usuario y el libro asociado
-         const responsePrestamos = [];
-         for (const prestamo of prestamos) {
-            const usuario = await this.usuarioModel
-               .findOne({ email: prestamo.idUsuario })
-               .exec();
-            const libro = await this.libroModel
-               .findOne({ isbn: prestamo.idLibro })
-               .exec();
-            responsePrestamos.push(
-               new ResponsePrestamoDto(prestamo, usuario, libro)
-            );
-         }
-         return responsePrestamos;
+         
+         return plainToInstance(ResponsePrestamoDto, prestamos, {
+            excludeExtraneousValues: true,
+         });
       } catch (error) {
          throw new InternalServerErrorException(
-            'Error al intentar obtener los préstamos'
+            'Error al intentar obtener los préstamos',
          );
       }
    }
@@ -237,12 +238,14 @@ export class PrestamosService {
     * @throws {ConflictException} - Si el usuario no tiene el libro prestado.
     * @throws {InternalServerErrorException} - Si ocurre un error durante la transacción.
     */
-   async update(updatePrestamoDto: UpdatePrestamoDto): Promise<ResponsePrestamoDto> {
+   async update(
+      updatePrestamoDto: UpdatePrestamoDto,
+   ): Promise<ResponsePrestamoDto> {
       const { idUsuario, idLibro, fechaDevolucionReal } = updatePrestamoDto;
 
       const session = await this.prestamoModel.db.startSession();
       try {
-         const resultado = await session.withTransaction(async () => {
+         const prestamo = await session.withTransaction(async () => {
             // Se valida que el libro exista
             const libro = await this.libroModel
                .findOne({ isbn: idLibro })
@@ -250,7 +253,7 @@ export class PrestamosService {
                .exec();
             if (!libro) {
                throw new NotFoundException(
-                  `El libro con ISBN ${idLibro} no existe`
+                  `El libro con ISBN ${idLibro} no existe`,
                );
             }
             // Se valida que el usuario exista
@@ -260,7 +263,7 @@ export class PrestamosService {
                .exec();
             if (!usuario) {
                throw new NotFoundException(
-                  `El usuario con ID ${idUsuario} no existe`
+                  `El usuario con ID ${idUsuario} no existe`,
                );
             }
 
@@ -271,7 +274,7 @@ export class PrestamosService {
                .exec();
             if (!prestamo) {
                throw new NotFoundException(
-                  `El usuario '${usuario.nombreCompleto}' (email: ${idUsuario}) no tiene prestado el libro '${libro.titulo}' (ISBN: ${idLibro})`
+                  `El usuario '${usuario.nombreCompleto}' (email: ${idUsuario}) no tiene prestado el libro '${libro.titulo}' (ISBN: ${idLibro})`,
                );
             }
 
@@ -290,10 +293,13 @@ export class PrestamosService {
             libro.stock += 1;
             await libro.save({ session });
 
-            return new ResponsePrestamoDto(prestamo, usuario, libro);
+            return prestamo;
          });
          await session.commitTransaction();
-         return resultado;
+         return plainToInstance(ResponsePrestamoDto, prestamo, {
+            excludeExtraneousValues: true,
+         });
+         
       } catch (error) {
          if (session.inTransaction()) {
             await session.abortTransaction();
@@ -305,7 +311,7 @@ export class PrestamosService {
             throw error;
          }
          throw new InternalServerErrorException(
-            'Error al intentar registrar la devolución del préstamo del usuario'
+            'Error al intentar registrar la devolución del préstamo del usuario',
          );
       } finally {
          session.endSession();
@@ -331,13 +337,15 @@ export class PrestamosService {
     * 5. Elimina el registro del préstamo
     * 6. Actualiza el stock del libro
     */
-   async remove(idUsuario: string, idLibro: string): Promise<Prestamo> {
+   async remove(
+      idUsuario: string,
+      idLibro: string,
+   ): Promise<ResponsePrestamoDto> {
       // Este endpoint implementa la eliminación de un préstamo
       // Se recibe el idUsuario y el idLibro
       const session = await this.prestamoModel.db.startSession();
-      session.startTransaction();
       try {
-         const resultado = await session.withTransaction(async () => {
+         const prestamo = await session.withTransaction(async () => {
             // Se valida que el libro exista
             const libro = await this.libroModel
                .findOne({ isbn: idLibro })
@@ -345,7 +353,7 @@ export class PrestamosService {
                .exec();
             if (!libro) {
                throw new NotFoundException(
-                  `El libro con ISBN ${idLibro} no existe`
+                  `El libro con ISBN ${idLibro} no existe`,
                );
             }
             // Se valida que el libro actualmente se encuentre en situación de prestado
@@ -355,7 +363,7 @@ export class PrestamosService {
                .exec();
             if (!prestamo) {
                throw new NotFoundException(
-                  `El libro con ISBN ${idLibro} no está prestado`
+                  `El libro con ISBN ${idLibro} no está prestado`,
                );
             }
             // Se valida que el usuario exista
@@ -365,13 +373,13 @@ export class PrestamosService {
                .exec();
             if (!usuario) {
                throw new NotFoundException(
-                  `El usuario con ID ${idUsuario} no existe`
+                  `El usuario con ID ${idUsuario} no existe`,
                );
             }
             // Se valida que el usuario tenga el libro prestado
             if (prestamo.idUsuario !== idUsuario) {
                throw new ConflictException(
-                  `El usuario con ID ${idUsuario} no tiene el libro con ISBN ${idLibro} prestado`
+                  `El usuario con ID ${idUsuario} no tiene el libro con ISBN ${idLibro} prestado`,
                );
             }
 
@@ -385,11 +393,22 @@ export class PrestamosService {
             return prestamo;
          });
          await session.commitTransaction();
-         return resultado;
+         const result = plainToInstance(ResponsePrestamoDto, prestamo, {
+            excludeExtraneousValues: true,
+         });
+         return result;
       } catch (error) {
-         await session.abortTransaction();
+         if (session.inTransaction()) {
+            await session.abortTransaction();
+         }
+         if (
+            error instanceof NotFoundException ||
+            error instanceof ConflictException
+         ) {
+            throw error;
+         }
          throw new InternalServerErrorException(
-            'Error al intentar realizar la devolución del préstamo'
+            'Error al intentar eliminar el préstamo del usuario',
          );
       } finally {
          session.endSession();

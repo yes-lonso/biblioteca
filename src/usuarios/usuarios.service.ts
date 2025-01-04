@@ -11,6 +11,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
 import { ResponseUsuarioDto } from './dto/response-usuario.dto';
+import { plainToInstance } from 'class-transformer';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con los usuarios.
@@ -21,7 +22,7 @@ import { ResponseUsuarioDto } from './dto/response-usuario.dto';
 export class UsuariosService {
    constructor(
       @InjectModel(Usuario.name)
-      private readonly usuariosModel: Model<Usuario>
+      private readonly usuariosModel: Model<Usuario>,
    ) {}
 
    /**
@@ -33,13 +34,13 @@ export class UsuariosService {
     * @throws {InternalServerErrorException} - Si hay un error al intentar crear el usuario.
     */
    async create(
-      createUsuarioDto: CreateUsuarioDto
+      createUsuarioDto: CreateUsuarioDto,
    ): Promise<ResponseUsuarioDto> {
       try {
          const usuario = await this.usuariosModel.create(createUsuarioDto);
-         return new ResponseUsuarioDto('Usuario creado exitosamente', [
-            usuario,
-         ]);
+         return plainToInstance(ResponseUsuarioDto, usuario, {
+            excludeExtraneousValues: true,
+         });
       } catch (error) {
          this.handleError(error, 'Error al intentar crear el usuario');
       }
@@ -48,19 +49,18 @@ export class UsuariosService {
    /**
     * Recupera todos los usuarios.
     *
-    * @returns {Promise<ResponseUsuarioDto>} - Una promesa que se resuelve en el objeto de respuesta que contiene la lista de usuarios.
+    * @returns {Promise<ResponseUsuarioDto[]>} - Una promesa que se resuelve en el objeto de respuesta que contiene la lista de usuarios.
     */
-   async findAll(): Promise<ResponseUsuarioDto> {
+   async findAll(): Promise<ResponseUsuarioDto[]> {
       try {
          const usuarios = await this.usuariosModel.find().exec();
-         return new ResponseUsuarioDto(
-            'Lista de usuarios recuperada exitosamente',
-            usuarios
-         );
+         return plainToInstance(ResponseUsuarioDto, usuarios, {
+            excludeExtraneousValues: true,
+         });
       } catch (error) {
          this.handleError(
             error,
-            'Error al intentar recuperar la lista de usuarios'
+            'Error al intentar recuperar la lista de usuarios',
          );
       }
    }
@@ -77,12 +77,12 @@ export class UsuariosService {
          const usuario = await this.usuariosModel.findOne({ email }).exec();
          if (!usuario) {
             throw new NotFoundException(
-               `No se encontró ningún usuario con el email ${email}`
+               `No se encontró ningún usuario con el email ${email}`,
             );
          }
-         return new ResponseUsuarioDto('Usuario recuperado exitosamente', [
-            usuario,
-         ]);
+         return plainToInstance(ResponseUsuarioDto, usuario, {
+            excludeExtraneousValues: true,
+         });
       } catch (error) {
          this.handleError(error, 'Error al intentar recuperar el usuario');
       }
@@ -99,7 +99,7 @@ export class UsuariosService {
     */
    async update(
       email: string,
-      updateUsuarioDto: UpdateUsuarioDto
+      updateUsuarioDto: UpdateUsuarioDto,
    ): Promise<ResponseUsuarioDto> {
       try {
          const usuario = await this.usuariosModel
@@ -107,12 +107,12 @@ export class UsuariosService {
             .exec();
          if (!usuario) {
             throw new NotFoundException(
-               `No se encontró ningún usuario con el email ${email}`
+               `No se encontró ningún usuario con el email ${email}`,
             );
          }
-         return new ResponseUsuarioDto('Usuario actualizado exitosamente', [
-            usuario,
-         ]);
+         return plainToInstance(ResponseUsuarioDto, usuario, {
+            excludeExtraneousValues: true,
+         });
       } catch (error) {
          this.handleError(error, 'Error al intentar actualizar el usuario');
       }
@@ -134,13 +134,12 @@ export class UsuariosService {
             const usuario = await this.usuariosModel
                .findOneAndDelete({ email })
                .exec();
-            return new ResponseUsuarioDto(
-               'El usuario ha sido eliminado con éxito',
-               [usuario]
-            );
+            return plainToInstance(ResponseUsuarioDto, usuario, {
+               excludeExtraneousValues: true,
+            });
          } else {
             throw new NotFoundException(
-               `No se encontró ningún usuario con email ${email}`
+               `No se encontró ningún usuario con email ${email}`,
             );
          }
       } catch (error) {

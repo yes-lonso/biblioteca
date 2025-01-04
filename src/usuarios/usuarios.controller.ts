@@ -44,7 +44,7 @@ export class UsuariosController {
     * @returns {Promise<ResponseUsuarioDto>} - Una promesa que se resuelve en el objeto de respuesta que contiene la lista de usuarios.
     */
    @Get()
-   findAll(): Promise<ResponseUsuarioDto> {
+   findAll(): Promise<ResponseUsuarioDto[]> {
       return this.usuariosService.findAll();
    }
 

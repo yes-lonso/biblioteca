@@ -12,7 +12,6 @@ import { LibrosService } from './libros.service';
 import { CreateLibroDto } from './dto/create-libro.dto';
 import { UpdateLibroDto } from './dto/update-libro.dto';
 import { FindOneLibroDto } from './dto/findone-libro.dto';
-import { Libro } from './entities/libro.entity';
 import { ResponseLibroDto } from './dto/response-libro.dto';
 
 @Controller('libros')
@@ -46,7 +45,7 @@ export class LibrosController {
     * @returns Un array de todos los libros.
     */
    @Get()
-   findAll(): Promise<ResponseLibroDto> {
+   findAll(): Promise<ResponseLibroDto[]> {
       return this.librosService.findAll();
    }
 
@@ -58,7 +57,7 @@ export class LibrosController {
     */
    @Get('buscar')
    findOne(
-      @Query() findOneLibroDto: FindOneLibroDto
+      @Query() findOneLibroDto: FindOneLibroDto,
    ): Promise<ResponseLibroDto> {
       return this.librosService.findOne(findOneLibroDto);
    }
@@ -71,7 +70,10 @@ export class LibrosController {
     * @returns El libro actualizado.
     */
    @Patch(':isbn')
-   update(@Param('isbn') isbn: string, @Body() updateLibroDto: UpdateLibroDto) {
+   update(
+      @Param('isbn') isbn: string,
+      @Body() updateLibroDto: UpdateLibroDto,
+   ): Promise<ResponseLibroDto> {
       return this.librosService.update(isbn, updateLibroDto);
    }
 

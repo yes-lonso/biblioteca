@@ -51,17 +51,3 @@ export class Libro extends Document {
 }
 
 export const LibroSchema = SchemaFactory.createForClass(Libro);
-
-/*
-// Habilitar las propiedades virtuales en el esquema y excluir _id y __v
-LibroSchema.set('toJSON', {
-   versionKey: false, // Excluye la propiedad __v (versión del documento) de la salida JSON
-   transform: (doc, ret) => {
-      delete ret._id; // Elimina la propiedad _id de la salida JSON
-      delete ret.id; // Elimina la propiedad id de la salida JSON
-      if (ret.fechaPub) {
-         ret.fechaPub = formatToSpanish(ret.fechaPub); // Formatea la fecha de publicación a formato español
-      }
-   },
-});
-*/

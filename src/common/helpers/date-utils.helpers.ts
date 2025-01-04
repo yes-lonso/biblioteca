@@ -46,5 +46,6 @@ export function formatToSpanish(
    timeZone: string = 'Europe/Madrid',
    format = 'DD-MM-YYYY'
 ): string {
-   return dayjs(date).tz(timeZone).format(format);
+   const fecha = dayjs(date).tz(timeZone).format(format);   
+   return fecha;
 }

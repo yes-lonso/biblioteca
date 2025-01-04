@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Libro } from 'src/libros/entities/libro.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { usuarios, libros } from './test-data';
+import { Prestamo } from 'src/prestamos/entities/prestamo.entity';
 
 @Injectable()
 export class TestDataService {
@@ -13,13 +14,17 @@ export class TestDataService {
       private readonly usuariosModel: Model<Usuario>,
 
       @InjectModel(Libro.name)
-      private readonly librosModel: Model<Libro>
+      private readonly librosModel: Model<Libro>,
+
+      @InjectModel(Prestamo.name)
+      private readonly prestamosModel: Model<Prestamo>
    ) {}
 
    async loadData(): Promise<string> {
       try {
          await this.usuariosModel.deleteMany({});
          await this.librosModel.deleteMany({});
+         await this.prestamosModel.deleteMany({});
          await this.usuariosModel.insertMany(usuarios);
          await this.librosModel.insertMany(libros);
          return `Datos cargados...`;

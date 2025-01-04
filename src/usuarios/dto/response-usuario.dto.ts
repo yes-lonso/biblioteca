@@ -1,53 +1,45 @@
-import { Expose, Transform } from 'class-transformer';
-import { Usuario } from '../entities/usuario.entity';
+import { Exclude, Expose } from 'class-transformer';
 
 /**
- * Objeto de Transferencia de Datos (DTO) para la respuesta de la lista de usuarios.
- *
- * @class ResponseUsuarioDto
- *
- * @property {string} mensaje - Mensaje adicional sobre la operación realizada.
- * @property {Usuario[]} usuarios - Lista de usuarios encontrados.
+ * DTO de respuesta para la entidad "Usuario".
+ * 
+ * Utiliza decoradores de class-transformer para exponer o excluir propiedades.
+ * Todas las propiedades marcadas con @Expose son enviadas al cliente.
  */
 export class ResponseUsuarioDto {
-   /**
-    * Mensaje adicional sobre la operación realizada.
-    *
-    * @type {string}
-    */
-   @Expose()
-   mensaje: string;
+  /**
+   * Identificador único del usuario (excluido de la respuesta).
+   */
+  @Exclude()
+  _id: string;
 
-   /**
-    * Lista de usuarios encontrados.
-    *
-    * @type {Usuario[]}
-    * @transform Excluye la propiedad `_id` de cada usuario.
-    */
-   @Expose()
-   @Transform(({ value }) =>
-      value.map((usuario: Usuario) => {
-         // Se desestructura el objeto usuario para extraer el _id
-         // Usuario.toObject() es una función de Mongoose que convierte el documento en un objeto plano
+  @Exclude()
+  __v: number;
 
-         // Si el objeto usuario es un documento de Mongoose, se convierte en un objeto JavaScript plano
-         // útil para manipular el documento sin las propiedades y métodos adicionales que Mongoose añade
-         const { _id, __v, id, nombre, apellido1, apellido2, ...rest } =
-            usuario.toObject ? usuario.toObject() : usuario;
-            console.log('rest', rest);
-         return rest
-      }),
-   )
-   usuarios: Usuario[];
+  @Expose()
+  email: string;
 
-   /**
-    * Constructor de la clase ResponseUsuarioDto.
-    *
-    * @param {string} mensaje - Mensaje adicional sobre la operación realizada.
-    * @param {Usuario[]} usuarios - Lista de usuarios encontrados.
-    */
-   constructor(mensaje: string, usuarios: Usuario[]) {
-      this.mensaje = mensaje;
-      this.usuarios = usuarios;
-   }
+  /**
+   * Primer apellido del usuario (excluido de la respuesta).
+   */
+  @Exclude()
+  apellido1: string;
+
+  /**
+   * Segundo apellido del usuario (excluido de la respuesta).
+   */
+  @Exclude()
+  apellido2: string;
+
+  /**
+   * Nombre completo del usuario. Se expone en la respuesta.
+   */
+  @Expose()
+  nombreCompleto: string;
+
+  /**
+   * Estado de actividad del usuario. Se expone en la respuesta.
+   */
+  @Expose()
+  activo: boolean;
 }

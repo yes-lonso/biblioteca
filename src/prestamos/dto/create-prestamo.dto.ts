@@ -25,14 +25,11 @@ import {
  * - Debe ser un número positivo.
  */
 export class CreatePrestamoDto {
-   @IsString({ message: 'El valor email debe ser una cadena de texto' })
-   @IsEmail({}, { message: 'El valor del email debe ser un email válido' })
-   @IsNotEmpty({ message: "La propiedad 'email' es requerida" })
+   
+   @IsEmail({}, { message: 'El valor del idUsuario debe contener un email válido' })   
    readonly idUsuario: string;
-
-   @IsString({ message: 'El valor ISBN debe estar en formato ISBN-13' })
-   @MinLength(13, { message: 'El valor ISBN debe tener 13 caracteres' })
-   @IsNotEmpty({ message: "La propiedad 'isbn' es requerida" })
+   
+   @MinLength(13, { message: 'El valor ISBN debe estar en formato ISBN-13' })   
    readonly idLibro: string;
 
    @IsNumber({}, { message: 'El valor de días de préstamo debe ser un número' })

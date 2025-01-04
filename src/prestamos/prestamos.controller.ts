@@ -11,6 +11,7 @@ import { PrestamosService } from './prestamos.service';
 import { CreatePrestamoDto } from './dto/create-prestamo.dto';
 import { UpdatePrestamoDto } from './dto/update-prestamo.dto';
 import { FindPrestamoDto } from './dto/find-prestamo.dto';
+import { ResponsePrestamoDto } from './dto/response-prestamo.dto';
 
 /**
  * Controlador para manejar las solicitudes relacionadas con los préstamos.
@@ -29,7 +30,7 @@ export class PrestamosController {
     * @returns El prestamo creado.
     */
    @Post()
-   create(@Body() createPrestamoDto: CreatePrestamoDto) {
+   create(@Body() createPrestamoDto: CreatePrestamoDto): Promise<ResponsePrestamoDto> {
       return this.prestamosService.create(createPrestamoDto);
    }
 
