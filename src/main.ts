@@ -27,6 +27,8 @@ async function bootstrap() {
       }),
    );
 
+   // Habilitar CORS
+   app.enableCors();
    // Inicia la aplicación y escucha en el puerto especificado en la variable de entorno PORT
    // Si PORT no está definido, utiliza el puerto 3000 por defecto
    const port = process.env.PORT ?? 3000;
