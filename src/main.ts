@@ -24,19 +24,16 @@ async function bootstrap() {
          whitelist: true,
          // Lanza una excepción si se encuentran propiedades no definidas en los DTOs
          forbidNonWhitelisted: true,
-         
       }),
    );
 
-   // // Configura interceptores globales para la serialización de clases
-   // // Esto permite transformar las respuestas de las clases a objetos planos
-   // app.useGlobalInterceptors(
-   //    new ClassSerializerInterceptor(app.get(Reflector)),
-   // );
-
    // Inicia la aplicación y escucha en el puerto especificado en la variable de entorno PORT
    // Si PORT no está definido, utiliza el puerto 3000 por defecto
-   await app.listen(process.env.PORT ?? 3000);
+   const port = process.env.PORT ?? 3000;
+   await app.listen(port);
+
+   // Mostrar en consola que la aplicación está lista y corriendo en el puerto especificado
+   console.log(`La aplicación está corriendo en el puerto ${port}`);
 }
 
 // Llama a la función bootstrap para iniciar la aplicación
