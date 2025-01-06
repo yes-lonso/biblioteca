@@ -42,7 +42,7 @@ async function bootstrap() {
    // Inicia la aplicación y escucha en el puerto especificado en la variable de entorno PORT
    // Si PORT no está definido, utiliza el puerto 3000 por defecto
    const port = process.env.PORT ?? 3000;
-   await app.listen(port);
+   await app.listen(port,'0.0.0.0');
 
    // Mostrar en consola que la aplicación está lista y corriendo en el puerto especificado
    console.log(`La aplicación está corriendo en el puerto ${port}`);
