@@ -18,7 +18,7 @@ import { ApiProperty } from '@nestjs/swagger';
  */
 @Schema()
 export class Prestamo extends Document {
-  @ApiProperty({ description: 'ID del usuario que realiza el préstamo', example: 'usuario@example.com' })
+  @ApiProperty({ description: 'ID del usuario que realiza el préstamo', example: 'usuario?@viu.es' })
   @Prop({ required: true, type: String })
   idUsuario: string;
 

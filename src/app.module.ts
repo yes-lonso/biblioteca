@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { LibrosModule } from './libros/libros.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { PrestamosModule } from './prestamos/prestamos.module';
-import { TestDataModule } from './test-data/test-data.module';
+import { TestDataModule } from './datos/datos.module';
 
 /**
  * Módulo raíz de la aplicación.

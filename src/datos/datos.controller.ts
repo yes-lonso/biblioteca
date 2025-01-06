@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
-import { TestDataService } from './test-data.service';
+import { TestDataService } from './datos.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 /**
  * Controlador para manejar las solicitudes relacionadas con los datos de prueba.
  */
 @ApiTags('Datos de prueba para usuarios y libros')
-@Controller('data')
+@Controller('datos')
 export class TestDataController {
    /**
     * Construye una nueva instancia de TestDataController.

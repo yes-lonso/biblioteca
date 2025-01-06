@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { Libro } from 'src/libros/entities/libro.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { Prestamo } from 'src/prestamos/entities/prestamo.entity';
-import { usuarios, libros } from './test-data';
+import { usuarios, libros } from './datos';
 
 /**
  * Servicio para manejar las operaciones relacionadas con los datos de prueba.
