@@ -1,6 +1,7 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 /**
  * Función principal para inicializar la aplicación NestJS.
@@ -29,6 +30,15 @@ async function bootstrap() {
 
    // Habilitar CORS
    app.enableCors();
+
+   const config = new DocumentBuilder()
+      .setTitle('Biblioteca API')
+      .setDescription('API para gestionar una biblioteca de libros')
+      .setVersion('1.0')
+      .addTag('libros', 'Operaciones relacionadas con los libros')
+      .build();
+   const documentFactory = () => SwaggerModule.createDocument(app, config);
+   SwaggerModule.setup('api', app, documentFactory);
    // Inicia la aplicación y escucha en el puerto especificado en la variable de entorno PORT
    // Si PORT no está definido, utiliza el puerto 3000 por defecto
    const port = process.env.PORT ?? 3000;
