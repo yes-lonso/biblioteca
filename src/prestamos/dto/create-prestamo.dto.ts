@@ -19,7 +19,7 @@ import { ApiProperty } from '@nestjs/swagger';
  * - Debe ser un número positivo.
  */
 export class CreatePrestamoDto {
-   @ApiProperty({ description: 'El ID del usuario que realiza el préstamo', example: 'usuario@example.com' })
+   @ApiProperty({ description: 'El ID del usuario que realiza el préstamo', example: 'usuario1@viu.es' })
    @IsEmail({}, { message: 'El valor del idUsuario debe contener un email válido' })
    readonly idUsuario: string;
 

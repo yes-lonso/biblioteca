@@ -17,7 +17,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
  * Controlador para manejar las solicitudes relacionadas con los usuarios.
  * @class UsuariosController
  */
-@ApiTags('usuarios')
+@ApiTags('Gestión de usuarios con acceso a préstamos de libros')
 @Controller('usuarios')
 export class UsuariosController {
    constructor(private readonly usuariosService: UsuariosService) {}

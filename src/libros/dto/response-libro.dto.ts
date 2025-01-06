@@ -62,7 +62,7 @@ export class ResponseLibroDto {
   /**
    * Fecha de publicación del libro (opcional). Se expone en la respuesta y se transforma al formato español.
    */
-  @ApiProperty({ description: 'La fecha de publicación del libro', required: false, example: '05=10=1967' })
+  @ApiProperty({ description: 'La fecha de publicación del libro', required: false, example: '05-10-1967' })
   @IsOptional()
   @Expose()
   @Transform(({ value }) => formatToSpanish(value))

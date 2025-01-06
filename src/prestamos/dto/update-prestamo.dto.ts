@@ -13,7 +13,7 @@ export class UpdatePrestamoDto {
     *
     * @example "usuarioX@viu.es"
     */
-   @ApiProperty({ description: 'El correo electrónico del usuario asociado con el préstamo', example: 'usuarioX@viu.es' })
+   @ApiProperty({ description: 'El correo electrónico del usuario asociado con el préstamo', example: 'usuario?@viu.es' })
    @IsString({ message: 'El valor email debe ser una cadena de texto' })
    @IsEmail({}, { message: 'El valor del email debe ser un email válido' })
    @IsNotEmpty({ message: "La propiedad 'email' es requerida" })

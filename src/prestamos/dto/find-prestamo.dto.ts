@@ -18,6 +18,7 @@ export class FindPrestamoDto {
     *
     * @example "9783161484100"
     */
+   @ApiProperty({ description: 'El ISBN del libro asociado con el préstamo', required: false, example: '9783161484100' })
    @IsOptional()
    @IsString({ message: 'El ISBN debe ser un número válido' })
    idLibro?: string;
@@ -25,9 +26,13 @@ export class FindPrestamoDto {
    /**
     * El correo electrónico del usuario asociado con el préstamo.
     *
-    * @example "usuarioX@viu.es"
+    * @example "usuario?@viu.es"
     */
-   @ApiProperty({ description: 'El correo electrónico del usuario asociado con el préstamo', required: false, example: 'usuarioX@viu.es' })
+   @ApiProperty({
+      description: 'El correo electrónico del usuario asociado con el préstamo',
+      required: false,
+      example: 'usuario?@viu.es',
+   })
    @IsOptional()
    @IsEmail({}, { message: 'El email debe ser un correo electrónico válido' })
    idUsuario?: string;
@@ -39,9 +44,15 @@ export class FindPrestamoDto {
     * @example "prestados"
     * @example "devueltos"
     */
-   @ApiProperty({ description: 'El estado del préstamo', required: false, example: 'todos', enum: EstadoPrestamo })
+   @ApiProperty({
+      description: 'El estado del préstamo',
+      required: false,
+      example: 'todos',
+      enum: EstadoPrestamo,
+   })
    @IsEnum(EstadoPrestamo, {
-      message: 'El estado debe ser uno de los siguientes valores: "todos", "prestados" o "devueltos"',
+      message:
+         'El estado debe ser uno de los siguientes valores: "todos", "prestados" o "devueltos"',
    })
    estado?: string = EstadoPrestamo.TODOS;
 }

@@ -20,35 +20,35 @@ export class ResponseUsuarioDto {
   /**
    * Correo electrónico del usuario. Se expone en la respuesta.
    */
-  @ApiProperty({ description: 'Correo electrónico del usuario', example: 'usuario@example.com' })
+  @ApiProperty({ description: 'Correo electrónico del usuario', example: 'usuario19@viu.es' })
   @Expose()
   email: string;
 
   /**
    * Nombre del usuario. Se expone en la respuesta.
    */
-  @ApiProperty({ description: 'Nombre del usuario', example: 'Juan' })
+  @ApiProperty({ description: 'Nombre del usuario', example: 'Javier Lorenzo' })
   @Expose()
   nombre: string;
 
   /**
    * Primer apellido del usuario. Se expone en la respuesta.
    */
-  @ApiProperty({ description: 'Primer apellido del usuario', example: 'Pérez' })
+  @ApiProperty({ description: 'Primer apellido del usuario', example: 'Alonso' })
   @Expose()
   apellido1: string;
 
   /**
    * Segundo apellido del usuario (opcional). Se expone en la respuesta.
    */
-  @ApiProperty({ description: 'Segundo apellido del usuario', required: false, example: 'García' })
+  @ApiProperty({ description: 'Segundo apellido del usuario', required: false, example: 'Moirón' })
   @Expose()
   apellido2?: string;
 
   /**
    * Nombre completo del usuario. Se expone en la respuesta.
    */
-  @ApiProperty({ description: 'Nombre completo del usuario', example: 'Juan Pérez García' })
+  @ApiProperty({ description: 'Nombre completo del usuario', example: 'Javier Lorenzo Alonso Moirón' })
   @Expose()
   nombreCompleto: string;
 

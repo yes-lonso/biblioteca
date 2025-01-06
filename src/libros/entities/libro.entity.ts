@@ -76,7 +76,7 @@ export class Libro extends Document {
    @ApiProperty({
       description: 'La fecha de publicación del libro',
       required: false,
-      example: '1967-06-05',
+      example: '05-06-1965',
    })
    @Prop({
       type: Date,

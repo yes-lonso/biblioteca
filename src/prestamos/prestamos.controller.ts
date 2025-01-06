@@ -6,6 +6,7 @@ import {
    Patch,
    Param,
    Delete,
+   Query,
 } from '@nestjs/common';
 import { PrestamosService } from './prestamos.service';
 import { CreatePrestamoDto } from './dto/create-prestamo.dto';
@@ -17,7 +18,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 /**
  * Controlador para manejar las solicitudes relacionadas con los préstamos.
  */
-@ApiTags('prestamos')
+@ApiTags('Gestión de prestamos de libros a usuarios')
 @Controller('prestamos')
 export class PrestamosController {
    /**
@@ -42,6 +43,10 @@ export class PrestamosController {
       status: 400,
       description: 'Datos proporcionados no válidos.',
    })
+   @ApiResponse({
+      status: 409,
+      description: 'El libro ya está prestado, o el usuario no está activo.',
+   })
    create(
       @Body() createPrestamoDto: CreatePrestamoDto,
    ): Promise<ResponsePrestamoDto> {
@@ -56,13 +61,15 @@ export class PrestamosController {
    @Get()
    @ApiOperation({
       summary: 'Obtener todos los préstamos según los criterios de búsqueda',
+      description:
+         'Obtiene todos los préstamos que coinciden con los criterios de búsqueda proporcionados. Puede utilizar el email del usuario, el ISBN del libro y el estado del préstamo, que puede ser "todos", "prestados" o "devueltos".',
    })
    @ApiResponse({
       status: 200,
       description: 'Lista de préstamos encontrados.',
       type: [ResponsePrestamoDto],
    })
-   findAll(@Body() findPrestamoDto: FindPrestamoDto) {
+   findAll(@Query() findPrestamoDto: FindPrestamoDto) {
       return this.prestamosService.findAll(findPrestamoDto);
    }
 
@@ -72,7 +79,7 @@ export class PrestamosController {
     * @returns El prestamo que ha sido devuelto.
     */
    @Patch()
-   @ApiOperation({ summary: 'Devolución de un préstamo' })
+   @ApiOperation({ summary: 'Devolución de un préstamo',description: 'Realiza la devolución de un préstamo con el email del usuario, el isbn del libro y la fecha de devolución real del libro.' })
    @ApiResponse({
       status: 200,
       description: 'El préstamo ha sido devuelto.',
@@ -92,7 +99,7 @@ export class PrestamosController {
    @Delete(':idUsuario/:idLibro')
    @ApiOperation({ summary: 'Eliminar un préstamo' })
    @ApiResponse({ status: 200, description: 'El préstamo ha sido eliminado.' })
-   @ApiResponse({ status: 404, description: 'Préstamo no encontrado.' })
+   @ApiResponse({ status: 404, description: 'Datos del préstamo no econtrados.' })
    remove(
       @Param('idUsuario') idUsuario: string,
       @Param('idLibro') idLibro: string,

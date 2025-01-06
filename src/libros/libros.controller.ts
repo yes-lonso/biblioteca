@@ -15,7 +15,7 @@ import { FindOneLibroDto } from './dto/findone-libro.dto';
 import { ResponseLibroDto } from './dto/response-libro.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('libros')
+@ApiTags('Gestión de libros en la Biblioteca')
 @Controller('libros')
 
 /**
@@ -54,6 +54,9 @@ export class LibrosController {
       status: 400,
       description: 'Datos proporcionados no válidos.',
    })
+   @ApiResponse({ status: 409, description: 'El libro ya existe.' })
+   @ApiResponse({ status: 500, description: 'Error al intentar crear el libro.' })
+      
    create(@Body() createLibroDto: CreateLibroDto): Promise<ResponseLibroDto> {
       return this.librosService.create(createLibroDto);
    }
@@ -81,12 +84,13 @@ export class LibrosController {
     * @returns Una promesa que se resuelve con el libro encontrado.
     */
    @Get('buscar')
-   @ApiOperation({ summary: 'Buscar un libro' })
+   @ApiOperation({ summary: 'Buscar un libro.' })
    @ApiResponse({
       status: 200,
       description: 'Libro encontrado.',
       type: ResponseLibroDto,
    })
+   @ApiResponse({ status: 400, description: 'Datos proporcionados no válidos.' })      
    @ApiResponse({
       status: 404,
       description: 'Libro no encontrado.',
@@ -111,7 +115,10 @@ export class LibrosController {
       description: 'El libro ha sido actualizado.',
       type: ResponseLibroDto,
    })
+   @ApiResponse({ status: 400, description: 'Datos proporcionados no válidos.' }) 
    @ApiResponse({ status: 404, description: 'Libro no encontrado.' })
+   @ApiResponse({ status: 409, description: 'El libro ya existe.' })
+   @ApiResponse({ status: 500, description: 'Error al intentar actualizar el libro.' })
    update(
       @Param('isbn') isbn: string,
       @Body() updateLibroDto: UpdateLibroDto,
@@ -133,7 +140,9 @@ export class LibrosController {
       type: ResponseLibroDto,
    })
    @ApiResponse({ status: 404, description: 'Libro no encontrado.' })
-   remove(@Param('isbn') isbn: string): Promise<ResponseLibroDto> {
+   @ApiResponse({ status: 500, description: 'Error al intentar eliminar el libro.' })
+   remove (@Param('isbn') isbn: string): Promise<ResponseLibroDto>
+   {
       return this.librosService.remove(isbn);
    }
 }
