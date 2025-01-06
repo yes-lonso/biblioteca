@@ -1,9 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import {
-   formatToSpanish,
-   TransformDate,
-} from 'src/common/helpers/date-utils.helpers';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Schema()
 /**
@@ -21,6 +18,11 @@ import {
  * @property {string} [resumen] - El resumen del libro. Es opcional.
  */
 export class Libro extends Document {
+   @ApiProperty({
+      description:
+         'El Número Internacional Normalizado del Libro (ISBN) del libro en versión:13',
+      example: '9783161484100',
+   })
    @Prop({
       required: true,
       unique: true,
@@ -30,23 +32,67 @@ export class Libro extends Document {
    })
    isbn: string;
 
-   @Prop({ required: true, type: String, trim: true })
+   @ApiProperty({
+      description: 'El título del libro',
+      example: 'Cien Años de Soledad',
+   })
+   @Prop({
+      required: true,
+      type: String,
+      trim: true,
+   })
    titulo: string;
 
-   @Prop({ required: true, type: String, trim: true })
+   @ApiProperty({
+      description: 'El autor del libro',
+      example: 'Gabriel García Márquez',
+   })
+   @Prop({
+      required: true,
+      type: String,
+      trim: true,
+   })
    autor: string;
 
-   @Prop({ type: Number, default: 1 })
+   @ApiProperty({ description: 'La cantidad de stock del libro', example: 5 })
+   @Prop({
+      required: true,
+      type: Number,
+      default: 1,
+   })
    stock: number;
 
-   // Se añaden las propiedades opcionales genero, fechaPub y resumen
-   @Prop({ type: String, trim: true })
+   @ApiProperty({
+      description: 'El género del libro',
+      required: false,
+      example: 'Realismo Mágico',
+   })
+   @Prop({
+      type: String,
+      trim: true,
+   })
    genero?: string;
 
-   @Prop({ type: Date })
+   @ApiProperty({
+      description: 'La fecha de publicación del libro',
+      required: false,
+      example: '1967-06-05',
+   })
+   @Prop({
+      type: Date,
+   })
    fechaPub?: Date;
 
-   @Prop({ type: String, trim: true })
+   @ApiProperty({
+      description: 'El resumen del libro',
+      required: false,
+      example:
+         'Una novela sobre la historia de la familia Buendía en el pueblo ficticio de Macondo.',
+   })
+   @Prop({
+      type: String,
+      trim: true,
+   })
    resumen?: string;
 }
 

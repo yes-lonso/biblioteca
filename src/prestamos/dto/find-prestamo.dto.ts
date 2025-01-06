@@ -1,10 +1,16 @@
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 import { EstadoPrestamo } from '../enums/estado-prestamo';
 
+
 /**
- * Data Transfer Object (DTO) para buscar préstamos.
+ * Objeto de Transferencia de Datos (DTO) para encontrar préstamos.
+ * Este DTO permite filtrar opcionalmente por usuario y estado del préstamo.
  *
- * Esta clase define los criterios de búsqueda opcionales para encontrar registros de préstamos.
+ * @class FindPrestamoDto
+ *
+ * @property {string} [idUsuario] - El correo electrónico del usuario asociado con el préstamo.
+ * @property {EstadoPrestamo} [estado] - El estado del préstamo (todos, prestados, devueltos).
  */
 export class FindPrestamoDto {
    /**
@@ -21,6 +27,7 @@ export class FindPrestamoDto {
     *
     * @example "usuarioX@viu.es"
     */
+   @ApiProperty({ description: 'El correo electrónico del usuario asociado con el préstamo', required: false, example: 'usuarioX@viu.es' })
    @IsOptional()
    @IsEmail({}, { message: 'El email debe ser un correo electrónico válido' })
    idUsuario?: string;
@@ -32,9 +39,9 @@ export class FindPrestamoDto {
     * @example "prestados"
     * @example "devueltos"
     */
+   @ApiProperty({ description: 'El estado del préstamo', required: false, example: 'todos', enum: EstadoPrestamo })
    @IsEnum(EstadoPrestamo, {
-      message:
-         'El estado debe ser uno de los siguientes valores: "todos", "prestados" o "devueltos"',
+      message: 'El estado debe ser uno de los siguientes valores: "todos", "prestados" o "devueltos"',
    })
    estado?: string = EstadoPrestamo.TODOS;
 }

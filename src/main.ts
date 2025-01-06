@@ -31,18 +31,27 @@ async function bootstrap() {
    // Habilitar CORS
    app.enableCors();
 
+   // Configuración de Swagger
    const config = new DocumentBuilder()
       .setTitle('Biblioteca API')
       .setDescription('API para gestionar una biblioteca de libros')
       .setVersion('1.0')
-      .addTag('libros', 'Operaciones relacionadas con los libros')
+      .addTag(
+         'libros',
+         'Operaciones relacionadas con la gestión de una Biblioteca',
+      )
+      .addTag('usuarios', 'Operaciones relacionadas con la gestión de usuarios')
+      .addTag(
+         'prestamos',
+         'Operaciones relacionadas con la gestión de préstamos',
+      )
       .build();
-   const documentFactory = () => SwaggerModule.createDocument(app, config);
-   SwaggerModule.setup('api', app, documentFactory);
+   const document = () => SwaggerModule.createDocument(app, config);
+   SwaggerModule.setup('api', app, document);
    // Inicia la aplicación y escucha en el puerto especificado en la variable de entorno PORT
    // Si PORT no está definido, utiliza el puerto 3000 por defecto
    const port = process.env.PORT ?? 3000;
-   await app.listen(port,'0.0.0.0');
+   await app.listen(port, '0.0.0.0');
 
    // Mostrar en consola que la aplicación está lista y corriendo en el puerto especificado
    console.log(`La aplicación está corriendo en el puerto ${port}`);

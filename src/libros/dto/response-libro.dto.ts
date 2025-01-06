@@ -1,6 +1,7 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { formatToSpanish } from 'src/common/helpers/date-utils.helpers';
 import { IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * DTO de respuesta para la entidad "Libro".
@@ -25,41 +26,53 @@ export class ResponseLibroDto {
   /**
    * ISBN del libro. Se expone en la respuesta.
    */
+  @ApiProperty({ description: 'El ISBN del libro', example: '9783161484100' })
   @Expose()
   isbn: string;
 
   /**
    * Título del libro. Se expone en la respuesta.
    */
+  @ApiProperty({ description: 'El título del libro', example: 'Cien Años de Soledad' })
   @Expose()
   titulo: string;
 
   /**
    * Autor del libro. Se expone en la respuesta.
    */
+  @ApiProperty({ description: 'El autor del libro', example: 'Gabriel García Márquez' })
   @Expose()
   autor: string;
 
   /**
-   * Cantidad de ejemplares disponibles en stock. Se expone en la respuesta.
+   * Cantidad de copias disponibles en stock. Se expone en la respuesta.
    */
+  @ApiProperty({ description: 'Cantidad de copias disponibles en stock', example: 5 })
   @Expose()
   stock: number;
 
   /**
-   * Género del libro (opcional). Se expone en la respuesta,
-   * y puede ser omitido si no está presente.
+   * Género del libro (opcional). Se expone en la respuesta.
    */
-  @Expose()
+  @ApiProperty({ description: 'El género del libro', required: false, example: 'Realismo Mágico' })
   @IsOptional()
+  @Expose()
   genero?: string;
 
-  @Expose()
+  /**
+   * Fecha de publicación del libro (opcional). Se expone en la respuesta y se transforma al formato español.
+   */
+  @ApiProperty({ description: 'La fecha de publicación del libro', required: false, example: '05=10=1967' })
   @IsOptional()
+  @Expose()
   @Transform(({ value }) => formatToSpanish(value))
-  fechaPub?: Date;
+  fechaPub?: string;
 
-  @Expose()
+  /**
+   * Resumen del libro (opcional). Se expone en la respuesta.
+   */
+  @ApiProperty({ description: 'El resumen del libro', required: false, example: 'Una novela sobre la historia de la familia Buendía en el pueblo ficticio de Macondo.' })
   @IsOptional()
+  @Expose()
   resumen?: string;
 }

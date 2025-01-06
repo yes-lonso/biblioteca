@@ -151,6 +151,7 @@ export class UsuariosService {
     * Maneja los errores lanzados por las operaciones de la base de datos.
     *
     * @param {any} error - El error lanzado por la operación de la base de datos.
+    * @param {string} errorMsg - El mensaje de error personalizado.
     * @throws {ConflictException} - Si el error es un conflicto de duplicados.
     * @throws {InternalServerErrorException} - Si hay un error interno del servidor.
     */

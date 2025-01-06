@@ -11,13 +11,17 @@ import { Usuario, UsuarioSchema } from './entities/usuario.entity';
  * @module UsuariosModule
  */
 @Module({
+   // Registra el controlador UsuariosController
    controllers: [UsuariosController],
+   // Registra el servicio UsuariosService
    providers: [UsuariosService],
+   // Importa el esquema de Mongoose para Usuario
    imports: [
       MongooseModule.forFeature([
          { name: Usuario.name, schema: UsuarioSchema },
       ]),
    ],
+   // Exporta el módulo de Mongoose para que esté disponible en otros módulos
    exports: [MongooseModule],
 })
 export class UsuariosModule {}

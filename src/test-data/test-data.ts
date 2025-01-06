@@ -1,3 +1,8 @@
+
+/**
+ * Datos de prueba para la colección de libros.
+ */
+
 export const libros = [
    {
       isbn: '9783161484100',
@@ -94,6 +99,9 @@ export const libros = [
    },
 ];
 
+/**
+ * Datos de prueba para la colección de usuarios.
+ */
 export const usuarios = [
    {
       email: 'usuario1@viu.es',

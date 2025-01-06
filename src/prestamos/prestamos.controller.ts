@@ -12,10 +12,12 @@ import { CreatePrestamoDto } from './dto/create-prestamo.dto';
 import { UpdatePrestamoDto } from './dto/update-prestamo.dto';
 import { FindPrestamoDto } from './dto/find-prestamo.dto';
 import { ResponsePrestamoDto } from './dto/response-prestamo.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 /**
  * Controlador para manejar las solicitudes relacionadas con los préstamos.
  */
+@ApiTags('prestamos')
 @Controller('prestamos')
 export class PrestamosController {
    /**
@@ -30,7 +32,19 @@ export class PrestamosController {
     * @returns El prestamo creado.
     */
    @Post()
-   create(@Body() createPrestamoDto: CreatePrestamoDto): Promise<ResponsePrestamoDto> {
+   @ApiOperation({ summary: 'Crear un nuevo préstamo' })
+   @ApiResponse({
+      status: 201,
+      description: 'El préstamo ha sido creado.',
+      type: ResponsePrestamoDto,
+   })
+   @ApiResponse({
+      status: 400,
+      description: 'Datos proporcionados no válidos.',
+   })
+   create(
+      @Body() createPrestamoDto: CreatePrestamoDto,
+   ): Promise<ResponsePrestamoDto> {
       return this.prestamosService.create(createPrestamoDto);
    }
 
@@ -40,16 +54,31 @@ export class PrestamosController {
     * @returns Una lista de prestamos.
     */
    @Get()
+   @ApiOperation({
+      summary: 'Obtener todos los préstamos según los criterios de búsqueda',
+   })
+   @ApiResponse({
+      status: 200,
+      description: 'Lista de préstamos encontrados.',
+      type: [ResponsePrestamoDto],
+   })
    findAll(@Body() findPrestamoDto: FindPrestamoDto) {
       return this.prestamosService.findAll(findPrestamoDto);
    }
 
    /**
-    * Actualiza un prestamo existente.
+    * Realiza la devolución de un préstamo.
     * @param updatePrestamoDto - El DTO (objeto de transferencia de datos) que contiene los datos para actualizar el prestamo.
-    * @returns El prestamo actualizado.
+    * @returns El prestamo que ha sido devuelto.
     */
    @Patch()
+   @ApiOperation({ summary: 'Devolución de un préstamo' })
+   @ApiResponse({
+      status: 200,
+      description: 'El préstamo ha sido devuelto.',
+      type: ResponsePrestamoDto,
+   })
+   @ApiResponse({ status: 404, description: 'Préstamo no encontrado.' })
    update(@Body() updatePrestamoDto: UpdatePrestamoDto) {
       return this.prestamosService.update(updatePrestamoDto);
    }
@@ -61,9 +90,12 @@ export class PrestamosController {
     * @returns El resultado de la operación de eliminación.
     */
    @Delete(':idUsuario/:idLibro')
+   @ApiOperation({ summary: 'Eliminar un préstamo' })
+   @ApiResponse({ status: 200, description: 'El préstamo ha sido eliminado.' })
+   @ApiResponse({ status: 404, description: 'Préstamo no encontrado.' })
    remove(
       @Param('idUsuario') idUsuario: string,
-      @Param('idLibro') idLibro: string
+      @Param('idLibro') idLibro: string,
    ) {
       return this.prestamosService.remove(idUsuario, idLibro);
    }

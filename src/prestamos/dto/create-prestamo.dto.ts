@@ -1,20 +1,14 @@
-import {
-   IsEmail,
-   IsNotEmpty,
-   IsNumber,
-   IsPositive,
-   IsString,
-   MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsPositive, MinLength } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
- * Objeto de Transferencia de Datos para crear un nuevo préstamo.
+ * Objeto de Transferencia de Datos (DTO) para crear un nuevo préstamo.
+ * Este DTO contiene las propiedades necesarias para crear un préstamo.
  *
  * @class CreatePrestamoDto
  *
- * @property {string} idUsuario - El ID del usuario que solicita el préstamo.
- * - Debe ser una cadena de texto no vacía.
- * - Debe tener un formato de correo electrónico válido.
+ * @property {string} idUsuario - El ID del usuario que realiza el préstamo.
+ * - Debe ser un email válido.
  *
  * @property {string} idLibro - El ID del libro a prestar.
  * - Debe ser una cadena de texto no vacía.
@@ -25,17 +19,17 @@ import {
  * - Debe ser un número positivo.
  */
 export class CreatePrestamoDto {
-   
-   @IsEmail({}, { message: 'El valor del idUsuario debe contener un email válido' })   
+   @ApiProperty({ description: 'El ID del usuario que realiza el préstamo', example: 'usuario@example.com' })
+   @IsEmail({}, { message: 'El valor del idUsuario debe contener un email válido' })
    readonly idUsuario: string;
-   
-   @MinLength(13, { message: 'El valor ISBN debe estar en formato ISBN-13' })   
+
+   @ApiProperty({ description: 'El ID del libro a prestar en formato ISBN-13', example: '9783161484100' })
+   @MinLength(13, { message: 'El valor ISBN debe estar en formato ISBN-13' })
    readonly idLibro: string;
 
+   @ApiProperty({ description: 'El número de días del préstamo', example: 14 })
    @IsNumber({}, { message: 'El valor de días de préstamo debe ser un número' })
-   @IsPositive({
-      message: 'El valor de días de préstamo debe ser un número positivo',
-   })
+   @IsPositive({ message: 'El valor de días de préstamo debe ser un número positivo' })
    @IsNotEmpty({ message: "La propiedad 'diasPrestamo' es requerida" })
    readonly diasPrestamo: number;
 }

@@ -1,68 +1,50 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
- * Esquema de Mongoose para la entidad Prestamo.
+ * Representa una entidad de préstamo con propiedades como ID de usuario, ID de libro, fechas de préstamo y devolución, nombre de usuario y título del libro.
  *
- * Esta clase define la estructura de los documentos de préstamos en la base de datos.
+ * @class Prestamo
+ * @extends Document
+ *
+ * @property {string} idUsuario - El ID del usuario que realiza el préstamo.
+ * @property {string} idLibro - El ID del libro prestado.
+ * @property {Date} fechaPrestamo - La fecha en que se realizó el préstamo.
+ * @property {Date} fechaDevolucion - La fecha prevista para la devolución del libro.
+ * @property {Date} [fechaDevolucionReal] - La fecha real en que se devolvió el libro.
+ * @property {string} nombreUsuario - El nombre completo del usuario que realizó el préstamo.
+ * @property {string} tituloLibro - El título del libro prestado.
  */
 @Schema()
 export class Prestamo extends Document {
-   /**
-    * El correo electrónico del usuario asociado con el préstamo.
-    *
-    * @example "usuario@ejemplo.com"
-    */
-   @Prop({ required: true, type: String })
-   idUsuario: string;
+  @ApiProperty({ description: 'ID del usuario que realiza el préstamo', example: 'usuario@example.com' })
+  @Prop({ required: true, type: String })
+  idUsuario: string;
 
-   /**
-    * El ISBN del libro asociado con el préstamo.
-    *
-    * @example "9783161484100"
-    */
-   @Prop({ required: true, type: String })
-   idLibro: string;
+  @ApiProperty({ description: 'ID del libro prestado', example: '9783161484100' })
+  @Prop({ required: true, type: String })
+  idLibro: string;
 
-   /**
-    * La fecha en que se realizó el préstamo.
-    *
-    * @example "01-10-2023"
-    */
-   @Prop({ required: true, type: Date, default: Date.now })
-   fechaPrestamo: Date;
+  @ApiProperty({ description: 'Fecha del préstamo', example: '04-01-2025' })
+  @Prop({ required: true, type: Date })
+  fechaPrestamo: Date;
 
-   /**
-    * La fecha en que se debe devolver el libro.
-    *
-    * @example "15-10-2023"
-    */
-   @Prop({ required: true, type: Date })
-   fechaDevolucion: Date;
+  @ApiProperty({ description: 'Fecha prevista para la devolución del libro', example: '14-01-2025' })
+  @Prop({ required: true, type: Date })
+  fechaDevolucion: Date;
 
-   /**
-    * La fecha en que se devolvió realmente el libro.
-    *
-    * @example "14-10-2023"
-    */
-   @Prop({ type: Date })
-   fechaDevolucionReal?: Date;
+  @ApiProperty({ description: 'Fecha real de devolución del libro', required: false, example: '13-01-2025' })
+  @Prop({ type: Date })
+  fechaDevolucionReal?: Date;
 
-   /**
-    * El nombre completo del usuario asociado con el préstamo.
-    *
-    * @example "Juan Pérez"
-    */
-   @Prop({ type: String, required: true})
-   nombreUsuario: string;
+  @ApiProperty({ description: 'Nombre completo del usuario que realizó el préstamo', example: 'Juan Pérez' })
+  @Prop({ required: true, type: String })
+  nombreUsuario: string;
 
-   /**
-    * El título del libro asociado con el préstamo.
-    *
-    * @example "La Odisea"
-    */
-   @Prop({ type: String, required: true })
-   tituloLibro: string;
+  @ApiProperty({ description: 'Título del libro prestado', example: 'La Odisea' })
+  @Prop({ required: true, type: String })
+  tituloLibro: string;
 }
 
 export const PrestamoSchema = SchemaFactory.createForClass(Prestamo);
