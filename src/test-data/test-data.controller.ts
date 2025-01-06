@@ -6,7 +6,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
  * Controlador para manejar las solicitudes relacionadas con los datos de prueba.
  */
 @ApiTags('Datos de prueba para usuarios y libros')
-@Controller('test-data')
+@Controller('data')
 export class TestDataController {
    /**
     * Construye una nueva instancia de TestDataController.
