@@ -72,6 +72,16 @@ export class Libro extends Document {
    precio: number;
 
    @ApiProperty({
+      description: 'La fecha de compra del libro',
+      example: '20-01-2025',
+   })
+   @Prop({
+      required: true,
+      type: Date,
+   })
+   fechaCompra: Date;
+
+   @ApiProperty({
       description: 'El género del libro',
       required: false,
       example: 'Realismo Mágico',
