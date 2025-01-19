@@ -50,6 +50,13 @@ export class ResponseLibroDto {
   @ApiProperty({ description: 'Cantidad de copias disponibles en stock', example: 5 })
   @Expose()
   stock: number;
+   
+   /**
+    * Precio del libro. Se expone en la respuesta.
+    */
+   @ApiProperty({ description: 'El precio del libro', example: 25.99 })
+   @Expose()
+   precio: number;
 
   /**
    * Género del libro (opcional). Se expone en la respuesta.
