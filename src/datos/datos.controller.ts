@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Delete, Get } from '@nestjs/common';
 import { TestDataService } from './datos.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -27,4 +27,18 @@ export class TestDataController {
    loadData() {
       return this.testDataService.loadData();
    }
+   /**
+    * Elimina todos los datos de prueba.
+    * @returns Un mensaje indicando el resultado de la eliminación de datos.
+    */
+   @Delete()
+   @ApiOperation({ summary: 'Eliminar datos de prueba' })
+   @ApiResponse({
+      status: 200,
+      description: 'Los datos de prueba han sido eliminados exitosamente.',
+   })
+   deleteData() {
+      return this.testDataService.deleteData();
+   }
+
 }

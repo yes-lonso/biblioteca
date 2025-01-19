@@ -53,4 +53,17 @@ export class TestDataService {
          throw new Error('Error al cargar los datos de prueba');
       }
    }
+
+   async deleteData(): Promise<string> {
+      try {
+         // Elimina todos los documentos existentes en las colecciones de usuarios, libros y préstamos
+         await this.usuariosModel.deleteMany({});
+         await this.librosModel.deleteMany({});
+         await this.prestamosModel.deleteMany({});
+
+         return 'Datos de prueba eliminados con éxito';
+      } catch (error) {
+         throw new Error('Error al eliminar los datos de prueba');
+      }
+   }
 }

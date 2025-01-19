@@ -14,6 +14,7 @@ import { ApiProperty } from '@nestjs/swagger';
  * @property {string} autor - El autor del libro. Es requerido.
  * @property {number} stock - La cantidad de stock del libro. Por defecto es 1.
  * @property {double} precio - El precio del libro. Es requerido.
+ * @property {Date} fechaCompra - La fecha de compra del libro. Es requerido.
  * @property {string} [genero] - El género del libro. Es opcional.
  * @property {Date} [fechaPub] - La fecha de publicación del libro. Es opcional.
  * @property {string} [resumen] - El resumen del libro. Es opcional.

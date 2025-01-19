@@ -58,6 +58,16 @@ export class ResponseLibroDto {
    @Expose()
    precio: number;
 
+   /**
+    * Fecha de compra del libro. Se expone en la respuesta y se transforma al formato español.
+    * 
+    * @decorator `@Transform(({ value }) => formatToSpanish(value))` - Transforma la fecha al formato español.
+    */
+   @ApiProperty({ description: 'La fecha de compra del libro', example: '20-01-2025' })
+   @Expose()
+   @Transform(({ value }) => formatToSpanish(value))
+   fechaCompra: string;
+
   /**
    * Género del libro (opcional). Se expone en la respuesta.
    */

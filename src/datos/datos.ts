@@ -13,6 +13,8 @@ export const libros = [
          'La historia de la familia Buendía en el pueblo ficticio de Macondo.',
       genero: 'Realismo mágico',
       stock: 5,
+      precio: 35.59,
+      fechaCompra: '17-01-2025',
    },
    {
       isbn: '9788437604947',
@@ -23,6 +25,8 @@ export const libros = [
          'Las aventuras de un hidalgo obsesionado con los libros de caballería.',
       genero: 'Clásico',
       stock: 3,
+      precio: 20.15,
+      fechaCompra: '16-01-2025',
    },
    {
       isbn: '9788420483001',
@@ -32,6 +36,8 @@ export const libros = [
       resumen: 'Un joven descubre un libro maldito que cambiará su vida.',
       genero: 'Misterio',
       stock: 2,
+      precio: 12.19,
+      fechaCompra: '17-01-2025',
    },
    {
       isbn: '9788490664393',
@@ -41,6 +47,8 @@ export const libros = [
       resumen: 'Una historia de amor que trasciende el tiempo.',
       genero: 'Romance',
       stock: 1,
+      precio: 57.30,
+      fechaCompra: '20-01-2025',
    },
    {
       isbn: '9788432234674',
@@ -50,6 +58,8 @@ export const libros = [
       resumen: 'Un pastor busca su leyenda personal.',
       genero: 'Filosofía',
       stock: 1,
+      precio: 15.00,
+      fechaCompra: '15-01-2025',
    },
    {
       isbn: '9788426482260',
@@ -59,6 +69,8 @@ export const libros = [
       resumen: 'Una novela innovadora que desafía la narrativa tradicional.',
       genero: 'Experimental',
       stock: 2,
+      precio: 80.59,
+      fechaCompra: '20-01-2025',
    },
    {
       isbn: '9788437502417',
@@ -68,6 +80,8 @@ export const libros = [
       resumen: 'Un viaje a Comala en busca de un padre desconocido.',
       genero: 'Realismo mágico',
       stock: 3,
+      precio: 25.99,
+      fechaCompra: '16-01-2025',
    },
    {
       isbn: '9788420681944',
@@ -77,6 +91,8 @@ export const libros = [
       resumen: 'La saga de una familia llena de amor, política y tragedia.',
       genero: 'Realismo mágico',
       stock: 4,
+      precio: 61.23,
+      fechaCompra: '17-01-2025',
    },
    {
       isbn: '9788493807672',
@@ -86,6 +102,8 @@ export const libros = [
       resumen: 'El relato del asesinato anunciado de Santiago Nasar.',
       genero: 'Crimen',
       stock: 1,
+      precio: 45.52,
+      fechaCompra: '12-01-2025',
    },
    {
       isbn: '9788497932542',
@@ -96,6 +114,8 @@ export const libros = [
          'Una mujer se interna en un hospital psiquiátrico para resolver un crimen.',
       genero: 'Thriller',
       stock: 2,
+      precio: 55.05,
+      fechaCompra: '22-01-2025',
    },
 ];
 
