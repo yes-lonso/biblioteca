@@ -21,9 +21,11 @@ import { TransformDate } from 'src/common/helpers/date-utils.helpers';
  * @property {string} titulo - El título del libro. Debe ser una cadena válida.
  * @property {string} autor - El autor del libro. Debe ser una cadena válida.
  * @property {number} stock - La cantidad de copias disponibles en stock. Debe ser un número positivo.
+ * @property {double} precio - El precio del libro. Es requerido. Debe ser un número positivo.
  * @property {string} [genero] - El género del libro. Debe ser una cadena válida si se proporciona.
  * @property {Date} [fechaPub] - La fecha de publicación del libro. Debe ser una fecha válida si se proporciona.
  * @property {string} [resumen] - El resumen del libro. Debe ser una cadena válida si se proporciona.
+ * @property {string} id - El identificador único del libro.
  */
 export class CreateLibroDto {
    @ApiProperty({ description: 'El ISBN del libro', example: '9783389130988' })
@@ -54,6 +56,14 @@ export class CreateLibroDto {
    @Max(10, { message: 'El stock no puede superar los 10 ejemplares' })
    readonly stock: number;
 
+   @ApiProperty({
+      description: 'El precio del libro',
+      example: 25.99,
+   })
+   @IsNotEmpty({ message: "La propiedad 'precio' es requerida" })
+   @IsPositive({ message: 'El precio debe ser un número positivo' })
+   readonly precio: number;
+   
    @ApiProperty({
       description: 'El género del libro',
       required: false,

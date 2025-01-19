@@ -13,6 +13,7 @@ import { ApiProperty } from '@nestjs/swagger';
  * @property {string} titulo - El título del libro. Es requerido.
  * @property {string} autor - El autor del libro. Es requerido.
  * @property {number} stock - La cantidad de stock del libro. Por defecto es 1.
+ * @property {double} precio - El precio del libro. Es requerido.
  * @property {string} [genero] - El género del libro. Es opcional.
  * @property {Date} [fechaPub] - La fecha de publicación del libro. Es opcional.
  * @property {string} [resumen] - El resumen del libro. Es opcional.
@@ -61,6 +62,13 @@ export class Libro extends Document {
       default: 1,
    })
    stock: number;
+
+   @ApiProperty({ description: 'El precio del libro', example: 25.99 })
+   @Prop({
+      required: true,
+      type: Number,
+   })
+   precio: number;
 
    @ApiProperty({
       description: 'El género del libro',
