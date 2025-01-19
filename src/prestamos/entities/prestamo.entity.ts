@@ -50,4 +50,4 @@ export class Prestamo extends Document {
 export const PrestamoSchema = SchemaFactory.createForClass(Prestamo);
 
 // Se define un índice compuesto único en idUsuario e idLibro
-PrestamoSchema.index({ idUsuario: 1, idLibro: 1 }, { unique: true });
+PrestamoSchema.index({ idUsuario: 1, idLibro: 1 });

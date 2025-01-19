@@ -126,6 +126,7 @@ export class PrestamosService {
                idLibro,
                fechaPrestamo: new Date(),
                fechaDevolucion,
+               fechaDevolucionReal: null,
                nombreUsuario: usuario.nombreCompleto,
                tituloLibro: libro.titulo
             });
@@ -145,7 +146,7 @@ export class PrestamosService {
          return plainToInstance(ResponsePrestamoDto, prestamo, {
             excludeExtraneousValues: true,
          });
-      } catch (error) {
+      } catch (error){
          if (session.inTransaction()) {
             await session.abortTransaction();
          }

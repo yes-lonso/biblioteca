@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, IsDate } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { TransformDate } from 'src/common/helpers/date-utils.helpers';
 
 /**
  * Data Transfer Object (DTO) para actualizar un préstamo.
@@ -37,7 +37,7 @@ export class UpdatePrestamoDto {
     */
    @ApiProperty({ description: 'La fecha de devolución del préstamo', required: false, example: '04-01-2025' })
    @IsOptional()
-   @Transform(({ value }) => new Date(value))
+   @TransformDate({ message: 'La fecha de compra del libro debe estar en el formato DD-MM-YYYY' })
    @IsDate({ message: 'La fecha de devolución debe ser una fecha válida' })
    readonly fechaDevolucionReal?: Date;
 }

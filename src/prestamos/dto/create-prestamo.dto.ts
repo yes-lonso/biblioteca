@@ -1,4 +1,11 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsPositive, MinLength } from 'class-validator';
+import {
+   IsEmail,
+   IsNotEmpty,
+   IsNumber,
+   IsPositive,
+   Max,
+   MinLength,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
@@ -19,17 +26,29 @@ import { ApiProperty } from '@nestjs/swagger';
  * - Debe ser un número positivo.
  */
 export class CreatePrestamoDto {
-   @ApiProperty({ description: 'El ID del usuario que realiza el préstamo', example: 'usuario1@viu.es' })
-   @IsEmail({}, { message: 'El valor del idUsuario debe contener un email válido' })
+   @ApiProperty({
+      description: 'El ID del usuario que realiza el préstamo',
+      example: 'usuario1@viu.es',
+   })
+   @IsEmail(
+      {},
+      { message: 'El valor del idUsuario debe contener un email válido' },
+   )
    readonly idUsuario: string;
 
-   @ApiProperty({ description: 'El ID del libro a prestar en formato ISBN-13', example: '9783161484100' })
+   @ApiProperty({
+      description: 'El ID del libro a prestar en formato ISBN-13',
+      example: '9783161484100',
+   })
    @MinLength(13, { message: 'El valor ISBN debe estar en formato ISBN-13' })
    readonly idLibro: string;
 
    @ApiProperty({ description: 'El número de días del préstamo', example: 14 })
    @IsNumber({}, { message: 'El valor de días de préstamo debe ser un número' })
-   @IsPositive({ message: 'El valor de días de préstamo debe ser un número positivo' })
+   @IsPositive({
+      message: 'El valor de días de préstamo debe ser un número positivo',
+   })
    @IsNotEmpty({ message: "La propiedad 'diasPrestamo' es requerida" })
+   @Max(15, { message: 'El valor de días de préstamo no puede ser mayor a 15' })
    readonly diasPrestamo: number;
 }
