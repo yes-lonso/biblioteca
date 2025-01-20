@@ -12,7 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
  * @property {string} idUsuario - ID del usuario que realiza la venta.
  * @property {string} idLibro - ID del libro vendido.
  * @property {Date} fechaVenta - Fecha de la venta.
- * @property {number} precioVenta - Precio de venta del libro.
+ * @property {number} precio - Precio de venta del libro.
  * @property {string} [info] - Información adicional de la venta.
  * @property {string} nombreUsuario - Nombre completo del usuario que compró el libro.
  * @property {string} tituloLibro - Título del libro vendido.
