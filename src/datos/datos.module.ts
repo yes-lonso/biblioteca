@@ -8,6 +8,7 @@ import {
    Prestamo,
    PrestamoSchema,
 } from 'src/prestamos/entities/prestamo.entity';
+import { Venta, VentaSchema } from 'src/ventas/entities/venta.entity';
 
 /**
  * Módulo para manejar los datos de prueba.
@@ -25,6 +26,7 @@ import {
       MongooseModule.forFeature([
          { name: Prestamo.name, schema: PrestamoSchema },
       ]),
+      MongooseModule.forFeature([{ name: Venta.name, schema: VentaSchema }]),
    ],
    // Registra el controlador TestDataController
    controllers: [TestDataController],

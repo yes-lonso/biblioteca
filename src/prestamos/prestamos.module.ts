@@ -33,5 +33,6 @@ import { UsuariosModule } from 'src/usuarios/usuarios.module';
    ],
    controllers: [PrestamosController],
    providers: [PrestamosService],
+   exports: [MongooseModule],
 })
 export class PrestamosModule {}

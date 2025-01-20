@@ -38,7 +38,7 @@ export class CreatePrestamoDto {
 
    @ApiProperty({
       description: 'El ID del libro a prestar en formato ISBN-13',
-      example: '9783161484100',
+      example: '9763161484100',
    })
    @MinLength(13, { message: 'El valor ISBN debe estar en formato ISBN-13' })
    readonly idLibro: string;

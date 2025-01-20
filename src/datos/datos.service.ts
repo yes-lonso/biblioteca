@@ -6,6 +6,7 @@ import { Libro } from 'src/libros/entities/libro.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { Prestamo } from 'src/prestamos/entities/prestamo.entity';
 import { usuarios, libros } from './datos';
+import { Venta } from 'src/ventas/entities/venta.entity';
 
 /**
  * Servicio para manejar las operaciones relacionadas con los datos de prueba.
@@ -26,7 +27,10 @@ export class TestDataService {
       private readonly librosModel: Model<Libro>,
 
       @InjectModel(Prestamo.name)
-      private readonly prestamosModel: Model<Prestamo>
+      private readonly prestamosModel: Model<Prestamo>,
+
+      @InjectModel(Venta.name)
+      private readonly ventasModel: Model<Venta>
    ) {}
 
    /**
@@ -39,10 +43,8 @@ export class TestDataService {
     */
    async loadData(): Promise<string> {
       try {
-         // Elimina todos los documentos existentes en las colecciones de usuarios, libros y préstamos
-         await this.usuariosModel.deleteMany({});
-         await this.librosModel.deleteMany({});
-         await this.prestamosModel.deleteMany({});
+         // Elimina todos los documentos existentes en las colecciones de usuarios, libros,  préstamos y ventas
+         await this.deleteData();
 
          // Inserta los datos de prueba en las colecciones de usuarios y libros
          await this.usuariosModel.insertMany(usuarios);
@@ -54,12 +56,14 @@ export class TestDataService {
       }
    }
 
+
    async deleteData(): Promise<string> {
       try {
-         // Elimina todos los documentos existentes en las colecciones de usuarios, libros y préstamos
+         // Elimina todos los documentos existentes en las colecciones de usuarios, libros, préstamos y ventas
          await this.usuariosModel.deleteMany({});
          await this.librosModel.deleteMany({});
          await this.prestamosModel.deleteMany({});
+         await this.ventasModel.deleteMany({});
 
          return 'Datos de prueba eliminados con éxito';
       } catch (error) {

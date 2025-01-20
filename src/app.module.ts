@@ -6,6 +6,7 @@ import { LibrosModule } from './libros/libros.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { PrestamosModule } from './prestamos/prestamos.module';
 import { TestDataModule } from './datos/datos.module';
+import { VentasModule } from './ventas/ventas.module';
 
 /**
  * Módulo raíz de la aplicación.
@@ -29,6 +30,7 @@ import { TestDataModule } from './datos/datos.module';
       PrestamosModule,
       // Importa el módulo de datos de prueba
       TestDataModule,
+      VentasModule,
    ],
    // No hay controladores en el módulo raíz
    controllers: [],

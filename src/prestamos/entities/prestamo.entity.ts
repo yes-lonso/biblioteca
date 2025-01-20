@@ -22,7 +22,7 @@ export class Prestamo extends Document {
   @Prop({ required: true, type: String })
   idUsuario: string;
 
-  @ApiProperty({ description: 'ID del libro prestado', example: '9783161484100' })
+  @ApiProperty({ description: 'ID del libro prestado', example: '9763161484100' })
   @Prop({ required: true, type: String })
   idLibro: string;
 
