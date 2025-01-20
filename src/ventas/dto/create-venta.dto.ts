@@ -40,7 +40,7 @@ export class CreateVentaDto {
     * @example "20-01-2025"
     */
 
-   @ApiProperty({ description: 'Fecha de la venta', example: '20-01-2025' })
+   @ApiProperty({ description: 'Fecha de la venta', example: '20-01-2025', required: false,type: String })
    @IsOptional()
    @TransformDate({
       message:

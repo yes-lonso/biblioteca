@@ -68,6 +68,8 @@ export class CreateLibroDto {
    @ApiProperty({
       description: 'La fecha de compra del libro',
       example: '20-01-2025',
+      required: true,
+      type: String,
    })
    @TransformDate({ message: 'La fecha de compra del libro debe estar en el formato DD-MM-YYYY' })
    @IsNotEmpty({ message: "La propiedad 'fechaCompra' es requerida" })
@@ -86,6 +88,7 @@ export class CreateLibroDto {
       description: 'La fecha de publicación del libro',
       required: false,
       example: '20-07-2021',
+      type: String,
    })
    @IsOptional()
    @TransformDate({ message: 'La fecha de publicación del libro debe estar en el formato DD-MM-YYYY' })

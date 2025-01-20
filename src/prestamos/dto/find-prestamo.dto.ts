@@ -8,7 +8,7 @@ import { EstadoPrestamo } from '../enums/estado-prestamo';
  * Este DTO permite filtrar opcionalmente por usuario y estado del préstamo.
  *
  * @class FindPrestamoDto
- *
+ * @property {string} [idLibro] - El ISBN del libro asociado con el préstamo.
  * @property {string} [idUsuario] - El correo electrónico del usuario asociado con el préstamo.
  * @property {EstadoPrestamo} [estado] - El estado del préstamo (todos, prestados, devueltos).
  */

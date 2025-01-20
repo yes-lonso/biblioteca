@@ -60,6 +60,7 @@ export class FindVentasDto {
       description: 'Fecha de inicio para la búsqueda de ventas',
       example: '01-01-2025',
       required: false,
+      type: String,
    })
    @IsOptional()
    @TransformDate({
@@ -76,6 +77,7 @@ export class FindVentasDto {
       description: 'Fecha de fin para la búsqueda de ventas',
       example: '31-12-2025',
       required: false,
+      type: String,
    })
    @IsOptional()
    @TransformDate({
